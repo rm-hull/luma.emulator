@@ -26,7 +26,7 @@ setup(
     package_data={"luma.emulator.images": ["luma/emulator/images/led_on.png",
                                            "luma/emulator/images/led_off.png",
                                            "luma/emulator/images/7-segment.png"]},
-    install_requires=["luma.core", "pygame"],
+    install_requires=["luma.core>=0.2.0", "pygame"],
     setup_requires=["pytest-runner"],
     tests_require=["mock", "pytest", "pytest-cov", "python-coveralls"],
     zip_safe=False,
