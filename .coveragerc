@@ -1,6 +1,6 @@
 # .coveragerc to control coverage.py
 [run]
-source = luma.core
+source = luma.emulator
 omit =
     setup.py
     .tox/*
