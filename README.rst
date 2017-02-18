@@ -23,7 +23,7 @@ Luma.Emulator
 .. image:: https://img.shields.io/maintenance/yes/2017.svg?maxAge=2592000
 
 **luma.emulator** provides a series of pseudo-display devices which allow 
-the [luma.core](https://github.com/rm-hull/luma.core) components to be used
+the `luma.core <https://github.com/rm-hull/luma.core>`_ components to be used
 without running a physical device. These include:
 
 * Real-time (pixel) emulator, based on `pygame <http://pygame.org/docs/>`__
