@@ -5,7 +5,7 @@ API Documentation
     :undoc-members:
     :show-inheritance:
 
-.. inheritance-diagram:: luma.core.device luma.core.emulator luma.core.mixin luma.core.virtual luma.emulator.device
+.. inheritance-diagram:: luma.core.device luma.emulator luma.core.mixin luma.core.virtual luma.emulator.device
 
 :mod:`luma.emulator.device`
 """""""""""""""""""""""""""
