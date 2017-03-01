@@ -18,6 +18,7 @@ version = read_file("VERSION.txt").strip()
 
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
+test_deps = ["mock", "pytest", "pytest-cov"]
 
 setup(
     name="luma.emulator",
@@ -33,16 +34,26 @@ setup(
     namespace_packages=["luma"],
     packages=["luma.emulator"],
     include_package_data=True,
-    package_data={"luma.emulator.images": ["luma/emulator/images/led_on.png",
-                                           "luma/emulator/images/led_off.png",
-                                           "luma/emulator/images/7-segment.png"]},
-    install_requires=["luma.core>=0.2.0", "pygame"],
+    package_data={"luma.emulator.images": [
+        "luma/emulator/images/led_on.png",
+        "luma/emulator/images/led_off.png",
+        "luma/emulator/images/7-segment.png"
+    ]},
+    install_requires=[
+        "luma.core>=0.2.0",
+        "pygame"
+    ],
     setup_requires=pytest_runner,
-    tests_require=["mock", "pytest", "pytest-cov", "python-coveralls"],
+    tests_require=test_deps,
     extras_require={
         'docs': [
             'sphinx >= 1.5.1'
-        ]
+        ],
+        'qa': [
+            'rstcheck',
+            'flake8'
+        ],
+        'test': test_deps
     },
     zip_safe=False,
     classifiers=[
