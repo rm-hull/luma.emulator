@@ -3,7 +3,7 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-# luma.core documentation build configuration file, created by
+# luma.emulator documentation build configuration file, created by
 # sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its
