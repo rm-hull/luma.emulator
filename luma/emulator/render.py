@@ -56,7 +56,7 @@ class transformer(object):
 
         for y in range(h):
             for x in range(w):
-                led = self._led_on if pix[x, y] > 0 else self._led_off
+                led = self._led_on if pix[x, y] & 0xFFFFFF > 0 else self._led_off
                 img.blit(led, (x * scale, y * scale))
 
         return img
@@ -71,7 +71,7 @@ class transformer(object):
             byte = 0
             for y in range(h - 1):
                 byte <<= 1
-                if pix[x, y] > 0:
+                if pix[x, y] & 0xFFFFFF > 0:
                     byte |= 1
 
             # Drop any values > 127

@@ -35,13 +35,20 @@ class emulator(device):
     def cleanup(self):
         pass
 
-    def to_surface(self, image):
+    def to_surface(self, image, alpha=1.0):
         """
         Converts a :py:mod:`PIL.Image` into a :class:`pygame.Surface`,
         transforming it according to the ``transform`` and ``scale``
         constructor arguments.
         """
-        im = image.convert("RGB")
+        assert(0.0 <= alpha <= 1.0)
+        if alpha < 1.0:
+            im = image.convert("RGBA")
+            black = Image.new(im.mode, im.size, "black")
+            im = Image.blend(black, im, alpha)
+        else:
+            im = image.convert("RGB")
+
         mode = im.mode
         size = im.size
         data = im.tobytes()
@@ -150,6 +157,8 @@ class pygame(emulator):
         self._clock = self._pygame.time.Clock()
         self._fps = frame_rate
         self._screen = None
+        self._last_image = Image.new(mode, (width, height))
+        self._contrast = 1.0
 
     def _abort(self):
         keystate = self._pygame.key.get_pressed()
@@ -160,6 +169,7 @@ class pygame(emulator):
         Takes a :py:mod:`PIL.Image` and renders it to a pygame display surface.
         """
         assert(image.size == self.size)
+        self._last_image = image
 
         image = self.preprocess(image)
         self._clock.tick(self._fps)
@@ -169,8 +179,19 @@ class pygame(emulator):
             self._pygame.quit()
             sys.exit()
 
-        surface = self.to_surface(image)
+        surface = self.to_surface(image, alpha=self._contrast)
         if self._screen is None:
             self._screen = self._pygame.display.set_mode(surface.get_size())
         self._screen.blit(surface, (0, 0))
         self._pygame.display.flip()
+
+    def show(self):
+        self.contrast(0xFF)
+
+    def hide(self):
+        self.contrast(0x00)
+
+    def contrast(self, value):
+        assert(0 <= value <= 255)
+        self._contrast = value / 255.0
+        self.display(self._last_image)
