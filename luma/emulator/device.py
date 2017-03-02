@@ -13,6 +13,8 @@ from luma.emulator.render import transformer
 
 logger = logging.getLogger(__name__)
 
+__all__ = ["capture", "gifanim", "pygame"]
+
 
 class emulator(device):
     """
