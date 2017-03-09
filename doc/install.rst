@@ -15,5 +15,5 @@ Installing from PyPi
 Install the latest version of the library directly from
 `PyPI <https://pypi.python.org/pypi?:action=display&name=luma.emulator>`_::
 
-  $ sudo apt-get install python-dev python-pip
+  $ sudo apt-get install python-dev python-pip libsdl-dev
   $ sudo pip install --upgrade luma.emulator
