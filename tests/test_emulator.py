@@ -10,6 +10,8 @@ Tests for luma.emulator.
 import os.path
 from tempfile import NamedTemporaryFile
 
+from PIL import Image
+
 from luma.core.render import canvas
 from luma.emulator.device import capture, gifanim, emulator
 
@@ -63,3 +65,14 @@ def test_gifanim_noimages():
     device = gifanim(filename=fname)
     device.write_animation()
     assert not os.path.exists(fname)
+
+
+def test_gifanim_max_frames():
+    reference = get_reference_image('anim.gif')
+    img = Image.open(reference)
+    fname = NamedTemporaryFile(suffix=".gif").name
+    device = gifanim(256, 128, filename=fname, max_frames=1)
+
+    with pytest.raises(SystemExit) as ex:
+        device.display(img)
+    assert str(ex.value) == '0'
