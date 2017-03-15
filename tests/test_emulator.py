@@ -3,25 +3,18 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-import hashlib
 import os.path
 from tempfile import NamedTemporaryFile
-from luma.emulator.device import capture, gifanim
+
 from luma.core.render import canvas
+from luma.emulator.device import capture, gifanim
 
 import baseline_data
-
-
-def md5(fname):
-    with open(fname, 'rb') as fp:
-        return hashlib.md5(fp.read()).hexdigest()
+from helpers import get_reference_image, md5
 
 
 def test_capture_display():
-    reference = os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        'reference',
-        'capture.png'))
+    reference = get_reference_image('capture.png')
 
     fname = NamedTemporaryFile(suffix=".png").name
     device = capture(file_template=fname, transform="none")
@@ -34,10 +27,7 @@ def test_capture_display():
 
 
 def test_gifanim_write():
-    reference = os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        'reference',
-        'anim.gif'))
+    reference = get_reference_image('anim.gif')
 
     fname = NamedTemporaryFile(suffix=".gif").name
     device = gifanim(filename=fname)
