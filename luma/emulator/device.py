@@ -6,10 +6,13 @@ import os
 import sys
 import atexit
 import logging
+
 from PIL import Image
+
 from luma.core.device import device
 from luma.core.serial import noop
 from luma.emulator.render import transformer
+
 
 logger = logging.getLogger(__name__)
 

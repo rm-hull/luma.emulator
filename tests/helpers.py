@@ -5,6 +5,11 @@
 import hashlib
 import os.path
 
+try:
+    from unittest.mock import call, Mock, patch
+except ImportError:
+    from mock import call, Mock, patch  # noqa: F401
+
 
 def md5(fname):
     with open(fname, 'rb') as fp:

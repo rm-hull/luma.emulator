@@ -3,14 +3,27 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+"""
+Tests for luma.emulator.
+"""
+
 import os.path
 from tempfile import NamedTemporaryFile
 
 from luma.core.render import canvas
-from luma.emulator.device import capture, gifanim
+from luma.emulator.device import capture, gifanim, emulator
+
+import pytest
 
 import baseline_data
-from helpers import get_reference_image, md5
+from helpers import patch, get_reference_image, md5
+
+
+def test_emulator_pygame_missing():
+    with patch.dict('sys.modules', {'pygame': None}):
+        with pytest.raises(RuntimeError) as ex:
+            emulator(1, 2, 3, 4, 5, 6)
+        assert str(ex.value) == 'Emulator requires pygame to be installed'
 
 
 def test_capture_display():
