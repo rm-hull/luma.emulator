@@ -28,6 +28,11 @@ def test_emulator_pygame_missing():
         assert str(ex.value) == 'Emulator requires pygame to be installed'
 
 
+def test_emulator_cleanup():
+    f = emulator(1, 2, 3, 'RGB', 'none', 6)
+    f.cleanup()
+
+
 def test_capture_display():
     reference = get_reference_image('capture.png')
 

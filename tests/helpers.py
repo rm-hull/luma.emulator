@@ -6,9 +6,9 @@ import hashlib
 import os.path
 
 try:
-    from unittest.mock import call, Mock, patch
+    from unittest.mock import call, patch
 except ImportError:
-    from mock import call, Mock, patch  # noqa: F401
+    from mock import call, patch  # noqa: F401
 
 
 def md5(fname):
