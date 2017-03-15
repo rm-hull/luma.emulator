@@ -6,10 +6,13 @@ import os
 import sys
 import atexit
 import logging
+
 from PIL import Image
+
 from luma.core.device import device
 from luma.core.serial import noop
 from luma.emulator.render import transformer
+
 
 logger = logging.getLogger(__name__)
 
@@ -140,8 +143,8 @@ class gifanim(emulator):
 class pygame(emulator):
     """
     Pseudo-device that acts like a physical display, except that it renders
-    to an displayed window. The frame rate is limited to 60FPS (much faster
-    than a Raspberry Pi can acheive, but this can be overridden as necessary).
+    to a displayed window. The frame rate is limited to 60FPS (much faster
+    than a Raspberry Pi can achieve, but this can be overridden as necessary).
     Supports 24-bit color depth.
 
     :mod:`pygame` is used to render the emulated display window, and it's

@@ -5,6 +5,9 @@
 import os
 
 
+__all__ = ["transformer"]
+
+
 class transformer(object):
     """
     Helper class used to dispatch transformation operations.

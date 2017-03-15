@@ -3,25 +3,38 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-import hashlib
+"""
+Tests for luma.emulator.
+"""
+
 import os.path
 from tempfile import NamedTemporaryFile
-from luma.emulator.device import capture, gifanim
+
+from PIL import Image
+
 from luma.core.render import canvas
+from luma.emulator.device import capture, gifanim, emulator
+
+import pytest
 
 import baseline_data
+from helpers import patch, get_reference_image, md5
 
 
-def md5(fname):
-    with open(fname, 'rb') as fp:
-        return hashlib.md5(fp.read()).hexdigest()
+def test_emulator_pygame_missing():
+    with patch.dict('sys.modules', {'pygame': None}):
+        with pytest.raises(RuntimeError) as ex:
+            emulator(1, 2, 3, 4, 5, 6)
+        assert str(ex.value) == 'Emulator requires pygame to be installed'
+
+
+def test_emulator_cleanup():
+    f = emulator(1, 2, 3, 'RGB', 'none', 6)
+    f.cleanup()
 
 
 def test_capture_display():
-    reference = os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        'reference',
-        'capture.png'))
+    reference = get_reference_image('capture.png')
 
     fname = NamedTemporaryFile(suffix=".png").name
     device = capture(file_template=fname, transform="none")
@@ -34,10 +47,7 @@ def test_capture_display():
 
 
 def test_gifanim_write():
-    reference = os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        'reference',
-        'anim.gif'))
+    reference = get_reference_image('anim.gif')
 
     fname = NamedTemporaryFile(suffix=".gif").name
     device = gifanim(filename=fname)
@@ -60,3 +70,14 @@ def test_gifanim_noimages():
     device = gifanim(filename=fname)
     device.write_animation()
     assert not os.path.exists(fname)
+
+
+def test_gifanim_max_frames():
+    reference = get_reference_image('anim.gif')
+    img = Image.open(reference)
+    fname = NamedTemporaryFile(suffix=".gif").name
+    device = gifanim(256, 128, filename=fname, max_frames=1)
+
+    with pytest.raises(SystemExit) as ex:
+        device.display(img)
+    assert str(ex.value) == '0'
