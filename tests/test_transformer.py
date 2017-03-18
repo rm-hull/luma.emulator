@@ -16,9 +16,9 @@ from luma.emulator.render import transformer
 
 from helpers import get_reference_image
 
-with open(get_reference_image("capture.png")) as fp:
-    baseline_im = Image.open(fp)
-    baseline_im.load()
+
+def baseline_im():
+    return pygame.image.load(get_reference_image("capture.png"))
 
 
 def to_pillow_img(surface):
@@ -31,9 +31,9 @@ def to_pygame_surface(im):
 
 
 def test_none():
-    with open(get_reference_image("capture.png")) as fp:
+    with open(get_reference_image("capture.png"), "rb") as fp:
         ref = Image.open(fp)
-        surface = to_pygame_surface(baseline_im)
+        surface = baseline_im()
         tf = transformer(pygame, 128, 64, 1)
         im = to_pillow_img(tf.none(surface))
         bbox = ImageChops.difference(ref, im).getbbox()
@@ -41,9 +41,9 @@ def test_none():
 
 
 def test_scale2x():
-    with open(get_reference_image("scale2x.png")) as fp:
+    with open(get_reference_image("scale2x.png"), "rb") as fp:
         ref = Image.open(fp)
-        surface = to_pygame_surface(baseline_im)
+        surface = baseline_im()
         tf = transformer(pygame, 128, 64, 2)
         im = to_pillow_img(tf.scale2x(surface))
         bbox = ImageChops.difference(ref, im).getbbox()
@@ -51,9 +51,9 @@ def test_scale2x():
 
 
 def test_smoothscale():
-    with open(get_reference_image("smoothscale.png")) as fp:
+    with open(get_reference_image("smoothscale.png"), "rb") as fp:
         ref = Image.open(fp)
-        surface = to_pygame_surface(baseline_im)
+        surface = baseline_im()
         tf = transformer(pygame, 128, 64, 2)
         im = to_pillow_img(tf.smoothscale(surface))
         bbox = ImageChops.difference(ref, im).getbbox()
@@ -61,9 +61,9 @@ def test_smoothscale():
 
 
 def test_identity():
-    with open(get_reference_image("identity.png")) as fp:
+    with open(get_reference_image("identity.png"), "rb") as fp:
         ref = Image.open(fp)
-        surface = to_pygame_surface(baseline_im)
+        surface = baseline_im()
         tf = transformer(pygame, 128, 64, 2)
         im = to_pillow_img(tf.identity(surface))
         bbox = ImageChops.difference(ref, im).getbbox()
@@ -71,7 +71,7 @@ def test_identity():
 
 
 def test_led_matrix():
-    with open(get_reference_image("led_matrix.png")) as fp:
+    with open(get_reference_image("led_matrix.png"), "rb") as fp:
         ref = Image.open(fp)
         device = dummy(width=40, height=24)
         with canvas(device) as draw:
@@ -86,7 +86,7 @@ def test_led_matrix():
 
 
 def test_seven_segment():
-    with open(get_reference_image("seven_segment.png")) as fp:
+    with open(get_reference_image("seven_segment.png"), "rb") as fp:
         ref = Image.open(fp)
         chars = [
             # Alphabet with omissions
