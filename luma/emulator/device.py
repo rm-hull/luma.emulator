@@ -83,9 +83,8 @@ class capture(emulator):
         self._count += 1
         filename = self._file_template.format(self._count)
         image = self.preprocess(image)
-        surface = self.to_surface(image)
         logger.debug("Writing: {0}".format(filename))
-        self._pygame.image.save(surface, filename)
+        image.save(filename)
 
 
 class gifanim(emulator):
