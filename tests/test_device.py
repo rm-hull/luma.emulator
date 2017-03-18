@@ -4,7 +4,7 @@
 # See LICENSE.rst for details.
 
 """
-Tests for luma.emulator.
+Tests for :py:mod:`luma.emulator.device`.
 """
 
 import os.path
