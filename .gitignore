@@ -50,6 +50,11 @@ coverage.xml
 # Django stuff:
 *.log
 
+# Eclipse
+.project
+.pydevproject
+.settings/
+
 # Sphinx documentation
 doc/_build/
 

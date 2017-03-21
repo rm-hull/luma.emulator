@@ -27,7 +27,7 @@ class emulator(device):
         super(emulator, self).__init__(serial_interface=noop())
         try:
             import pygame
-        except:
+        except ImportError:
             raise RuntimeError("Emulator requires pygame to be installed")
         self._pygame = pygame
         self.capabilities(width, height, rotate, mode)
