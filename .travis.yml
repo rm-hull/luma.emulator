@@ -30,7 +30,7 @@ addons:
     - libjpeg8-dev
     - i2c-tools
 
-install: pip install -U pip tox coveralls
+install: pip install -U pip tox setuptools coveralls
 script: tox -vv
 after_success:
   - coveralls
