@@ -318,4 +318,3 @@ class asciiart(emulator):
         sys.stdout.flush()
         sys.stderr.write(self._captured[1].getvalue())
         sys.stderr.flush()
-
