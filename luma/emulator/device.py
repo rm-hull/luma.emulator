@@ -9,7 +9,10 @@ import logging
 import string
 import curses
 import collections
-from cStringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from PIL import Image, ImageFont, ImageDraw
 
