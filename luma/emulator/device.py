@@ -218,6 +218,8 @@ class asciiart(emulator):
     cleanup method is called.
 
     Loosely based on https://github.com/ajalt/pyasciigen/blob/master/asciigen.py
+
+    .. versionadded:: 0.2.0
     """
     def __init__(self, width=128, height=64, rotate=0, mode="RGB", transform="scale2x",
                  scale=2, **kwargs):
