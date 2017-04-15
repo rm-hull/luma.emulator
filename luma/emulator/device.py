@@ -240,7 +240,7 @@ class asciiart(emulator):
 
         # Sort printable characters according to the number of black pixels present.
         # Don't use string.printable, since we don't want any whitespace except spaces.
-        charset = (string.letters + string.digits + string.punctuation + "  ")
+        charset = (string.ascii_letters + string.digits + string.punctuation + "  ")
         self._chars = list(reversed(sorted(charset, key=self._char_density)))
         self._char_width, self._char_height = ImageFont.load_default().getsize("X")
         self._contrast = 1.0
