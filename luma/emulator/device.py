@@ -287,7 +287,7 @@ class asciiart(emulator):
         self._stdscr.move(0, 0)
         try:
             for (ch, color) in self._generate_art(image, int(image.width * scale), int(image.height * scale)):
-                self._stdscr.addch(ch, curses.color_pair(color))
+                self._stdscr.addstr(ch, curses.color_pair(color))
 
         except curses.error:
             # End of screen reached
