@@ -31,6 +31,7 @@ without running a physical device. These include:
 * LED matrix and 7-segment renderers
 * PNG screen capture
 * Animated GIF animator
+* Real-time ASCII-art emulator
 
 .. image:: https://raw.githubusercontent.com/rm-hull/luma.oled/master/doc/images/clock_anim.gif?raw=true
    :alt: clock
@@ -40,6 +41,12 @@ without running a physical device. These include:
 
 .. image:: https://raw.githubusercontent.com/rm-hull/luma.oled/master/doc/images/crawl_anim.gif?raw=true
    :alt: crawl
+
+.. image:: https://raw.githubusercontent.com/rm-hull/luma.emulator/master/doc/images/ascii-art.png?raw=true
+   :alt: asciiart
+
+.. image:: https://raw.githubusercontent.com/rm-hull/luma.led_matrix/master/doc/images/emulator.gif
+   :alt: max7219 emulator
 
 License
 -------

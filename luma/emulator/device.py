@@ -6,17 +6,25 @@ import os
 import sys
 import atexit
 import logging
+import string
+import curses
+import collections
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
-from PIL import Image
+from PIL import Image, ImageFont, ImageDraw
 
 from luma.core.device import device
 from luma.core.serial import noop
 from luma.emulator.render import transformer
+from luma.emulator.clut import rgb2short
 
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["capture", "gifanim", "pygame"]
+__all__ = ["capture", "gifanim", "pygame", "asciiart"]
 
 
 class emulator(device):
@@ -197,3 +205,118 @@ class pygame(emulator):
         assert(0 <= value <= 255)
         self._contrast = value / 255.0
         self.display(self._last_image)
+
+
+class asciiart(emulator):
+    """
+    Pseudo-device that acts like a physical display, except that it converts the
+    image to display into an ASCII-art representation and downscales colors to
+    match the xterm-256 color scheme. Supports 24-bit color depth.
+
+    This device takes hold of the terminal window (using curses), and any output
+    for sysout and syserr is captured and stored, and is replayed when the
+    cleanup method is called.
+
+    Loosely based on https://github.com/ajalt/pyasciigen/blob/master/asciigen.py
+
+    .. versionadded:: 0.2.0
+    """
+    def __init__(self, width=128, height=64, rotate=0, mode="RGB", transform="scale2x",
+                 scale=2, **kwargs):
+
+        super(asciiart, self).__init__(width, height, rotate, mode, transform, scale)
+        self._stdscr = curses.initscr()
+        curses.start_color()
+        curses.use_default_colors()
+        for i in range(0, curses.COLORS):
+            curses.init_pair(i, i, -1)
+        curses.noecho()
+        curses.cbreak()
+
+        # Capture all stdout, stderr
+        self._old_stdX = (sys.stdout, sys.stderr)
+        self._captured = (StringIO(), StringIO())
+        sys.stdout, sys.stderr = self._captured
+
+        # Sort printable characters according to the number of black pixels present.
+        # Don't use string.printable, since we don't want any whitespace except spaces.
+        charset = (string.letters + string.digits + string.punctuation + "  ")
+        self._chars = list(reversed(sorted(charset, key=self._char_density)))
+        self._char_width, self._char_height = ImageFont.load_default().getsize("X")
+        self._contrast = 1.0
+        self._last_image = Image.new(mode, (width, height))
+
+    def _char_density(self, c, font=ImageFont.load_default()):
+        """
+        Count the number of black pixels in a rendered character.
+        """
+        image = Image.new('1', font.getsize(c), color=255)
+        draw = ImageDraw.Draw(image)
+        draw.text((0, 0), c, fill="white", font=font)
+        return collections.Counter(image.getdata())[0]   # 0 is black
+
+    def _generate_art(self, image, width, height):
+        """
+        Return an iterator that produces the ascii art.
+        """
+        # Characters aren't square, so scale the output by the aspect ratio of a charater
+        height = int(height * self._char_width / float(self._char_height))
+        image = image.resize((width, height), Image.ANTIALIAS).convert("RGB")
+
+        for (r, g, b) in image.getdata():
+            greyscale = int(0.299 * r + 0.587 * g + 0.114 * b)
+            ch = self._chars[int(greyscale / 255. * (len(self._chars) - 1) + 0.5)]
+            yield (ch, rgb2short(r, g, b))
+
+    def display(self, image):
+        """
+        Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
+        ASCII-art.
+        """
+        assert(image.size == self.size)
+        self._last_image = image
+
+        surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
+        rawbytes = self._pygame.image.tostring(surface, "RGB", False)
+        image = Image.frombytes("RGB", (self._w * self.scale, self._h * self.scale), rawbytes)
+
+        scr_width = self._stdscr.getmaxyx()[1]
+        scale = float(scr_width) / image.width
+
+        self._stdscr.erase()
+        self._stdscr.move(0, 0)
+        try:
+            for (ch, color) in self._generate_art(image, int(image.width * scale), int(image.height * scale)):
+                self._stdscr.addch(ch, curses.color_pair(color))
+
+        except curses.error:
+            # End of screen reached
+            pass
+
+        self._stdscr.refresh()
+
+    def show(self):
+        self.contrast(0xFF)
+
+    def hide(self):
+        self.contrast(0x00)
+
+    def contrast(self, value):
+        assert(0 <= value <= 255)
+        self._contrast = value / 255.0
+        self.display(self._last_image)
+
+    def cleanup(self):
+        super(asciiart, self).cleanup()
+
+        # Stty sane
+        curses.nocbreak()
+        curses.echo()
+        curses.endwin()
+
+        # Restore stdout & stderr, then print out captured
+        sys.stdout, sys.stderr = self._old_stdX
+        sys.stdout.write(self._captured[0].getvalue())
+        sys.stdout.flush()
+        sys.stderr.write(self._captured[1].getvalue())
+        sys.stderr.flush()
