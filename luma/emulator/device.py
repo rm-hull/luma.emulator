@@ -278,7 +278,7 @@ class asciiart(emulator):
         rawbytes = self._pygame.image.tostring(surface, "RGB", False)
         image = Image.frombytes("RGB", (self._w * self.scale, self._h * self.scale), rawbytes)
 
-        scr_height, scr_width = self._stdscr.getmaxyx()
+        scr_width = self._stdscr.getmaxyx()[1]
         scale = float(scr_width) / image.width
 
         self._stdscr.erase()
@@ -312,7 +312,7 @@ class asciiart(emulator):
         curses.echo()
         curses.endwin()
 
-        # Print out captured stdout/stderr
+        # Restore stdout & stderr, then print out captured
         sys.stdout, sys.stderr = self._old_stdX
         sys.stdout.write(self._captured[0].getvalue())
         sys.stdout.flush()
