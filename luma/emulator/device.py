@@ -43,7 +43,21 @@ class emulator(device):
         self.scale = 1 if transform == "none" else scale
         self._transform = getattr(transformer(pygame, width, height, scale),
                                   "none" if scale == 1 else transform)
+        self._contrast = 1.0
+        self._last_image = None
         self.segment_mapper = regular
+
+    def show(self):
+        self.contrast(0xFF)
+
+    def hide(self):
+        self.contrast(0x00)
+
+    def contrast(self, value):
+        assert(0 <= value <= 255)
+        self._contrast = value / 255.0
+        if self._last_image is not None:
+            self.display(self._last_image)
 
     def cleanup(self):
         pass
@@ -89,12 +103,14 @@ class capture(emulator):
         Takes a :py:mod:`PIL.Image` and dumps it to a numbered PNG file.
         """
         assert(image.size == self.size)
+        self._last_image = image
 
         self._count += 1
         filename = self._file_template.format(self._count)
         image = self.preprocess(image)
+        surface = self.to_surface(image, alpha=self._contrast)
         logger.debug("Writing: {0}".format(filename))
-        image.save(filename)
+        self._pygame.image.save(surface, filename)
 
 
 class gifanim(emulator):
@@ -122,11 +138,12 @@ class gifanim(emulator):
         stores it for later building into an animated GIF.
         """
         assert(image.size == self.size)
+        self._last_image = image
 
         image = self.preprocess(image)
-        surface = self.to_surface(image)
+        surface = self.to_surface(image, alpha=self._contrast)
         rawbytes = self._pygame.image.tostring(surface, "RGB", False)
-        im = Image.frombytes("RGB", (self._w * self.scale, self._h * self.scale), rawbytes)
+        im = Image.frombytes("RGB", surface.get_size(), rawbytes)
         self._images.append(im)
 
         self._count += 1
@@ -169,8 +186,6 @@ class pygame(emulator):
         self._clock = self._pygame.time.Clock()
         self._fps = frame_rate
         self._screen = None
-        self._last_image = Image.new(mode, (width, height))
-        self._contrast = 1.0
 
     def _abort(self):
         keystate = self._pygame.key.get_pressed()
@@ -196,17 +211,6 @@ class pygame(emulator):
             self._screen = self._pygame.display.set_mode(surface.get_size())
         self._screen.blit(surface, (0, 0))
         self._pygame.display.flip()
-
-    def show(self):
-        self.contrast(0xFF)
-
-    def hide(self):
-        self.contrast(0x00)
-
-    def contrast(self, value):
-        assert(0 <= value <= 255)
-        self._contrast = value / 255.0
-        self.display(self._last_image)
 
 
 class asciiart(emulator):
@@ -246,7 +250,6 @@ class asciiart(emulator):
         self._chars = list(reversed(sorted(charset, key=self._char_density)))
         self._char_width, self._char_height = ImageFont.load_default().getsize("X")
         self._contrast = 1.0
-        self._last_image = Image.new(mode, (width, height))
 
     def _char_density(self, c, font=ImageFont.load_default()):
         """
@@ -280,7 +283,7 @@ class asciiart(emulator):
 
         surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
         rawbytes = self._pygame.image.tostring(surface, "RGB", False)
-        image = Image.frombytes("RGB", (self._w * self.scale, self._h * self.scale), rawbytes)
+        image = Image.frombytes("RGB", surface.get_size(), rawbytes)
 
         scr_width = self._stdscr.getmaxyx()[1]
         scale = float(scr_width) / image.width
@@ -296,17 +299,6 @@ class asciiart(emulator):
             pass
 
         self._stdscr.refresh()
-
-    def show(self):
-        self.contrast(0xFF)
-
-    def hide(self):
-        self.contrast(0x00)
-
-    def contrast(self, value):
-        assert(0 <= value <= 255)
-        self._contrast = value / 255.0
-        self.display(self._last_image)
 
     def cleanup(self):
         super(asciiart, self).cleanup()
