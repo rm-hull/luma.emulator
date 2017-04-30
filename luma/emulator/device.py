@@ -20,6 +20,7 @@ from luma.core.device import device
 from luma.core.serial import noop
 from luma.emulator.render import transformer
 from luma.emulator.clut import rgb2short
+from luma.emulator.segment_mapper import regular
 
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,7 @@ class emulator(device):
         self.scale = 1 if transform == "none" else scale
         self._transform = getattr(transformer(pygame, width, height, scale),
                                   "none" if scale == 1 else transform)
+        self.segment_mapper = regular
 
     def cleanup(self):
         pass
