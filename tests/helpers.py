@@ -8,7 +8,7 @@ import os.path
 try:
     from unittest.mock import call, patch
 except ImportError:
-    from mock import call, patch  # noqa: F401
+    from mock import call, patch, Mock  # noqa: F401
 
 
 def md5(fname):
@@ -21,3 +21,8 @@ def get_reference_image(fname):
         os.path.dirname(__file__),
         'reference',
         fname))
+
+
+def assert_identical(rname, fname):
+    reference = get_reference_image(rname)
+    assert md5(reference) == md5(fname)
