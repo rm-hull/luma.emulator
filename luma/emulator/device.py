@@ -11,7 +11,7 @@ import curses
 import collections
 try:
     from StringIO import StringIO
-except ImportError:
+except ImportError:  # pragma: no cover
     from io import StringIO
 
 from PIL import Image, ImageFont, ImageDraw
@@ -253,7 +253,7 @@ class asciiart(emulator):
         image = Image.new('1', font.getsize(c), color=255)
         draw = ImageDraw.Draw(image)
         draw.text((0, 0), c, fill="white", font=font)
-        return collections.Counter(image.getdata())[0]   # 0 is black
+        return collections.Counter(image.getdata())[0]  # 0 is black
 
     def _generate_art(self, image, width, height):
         """
