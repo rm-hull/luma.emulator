@@ -23,6 +23,18 @@ def test_cleanup():
     device.cleanup()
 
 
+def test_show():
+    device = emulator(1, 2, 3, 'RGB', 'none', 6)
+    device.show()
+    assert device._contrast == 1.0
+
+
+def test_hide():
+    device = emulator(1, 2, 3, 'RGB', 'none', 6)
+    device.hide()
+    assert device._contrast == 0.0
+
+
 def test_alpha():
     w, h = 100, 50
     device = emulator(width=w, height=h, rotate=3, mode='RGB',
