@@ -17,7 +17,7 @@ except ImportError:  # pragma: no cover
 from PIL import Image, ImageFont, ImageDraw
 
 from luma.core.device import device
-from luma.core.serial import noop
+from luma.core.interface.serial import noop
 from luma.emulator.render import transformer
 from luma.emulator.clut import rgb2short
 from luma.emulator.segment_mapper import regular

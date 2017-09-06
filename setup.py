@@ -44,7 +44,7 @@ setup(
         "luma/emulator/images/7-segment.png"
     ]},
     install_requires=[
-        "luma.core>=0.2.0",
+        "luma.core>=1.0.0",
         "pygame"
     ],
     setup_requires=pytest_runner,
