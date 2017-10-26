@@ -15,6 +15,11 @@ matrix:
         - python: 3.5
           env: TOXENV=qa,doc
 
+addons:
+    apt:
+        packages:
+            - graphviz
+
 install: pip install --upgrade pip tox setuptools coveralls
 script: tox -vv
 after_success: if [ "$TOXENV" == "py36" ]; then coveralls; fi
