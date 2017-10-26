@@ -12,8 +12,8 @@ matrix:
           env: TOXENV=py35
         - python: 3.6
           env: TOXENV=py36
-        - python: 2.7
-          env: TOXENV=qa
+        - python: 3.5
+          env: TOXENV=qa,doc
 
 install: pip install --upgrade pip tox setuptools coveralls
 script: tox -vv
