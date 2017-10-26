@@ -15,7 +15,6 @@ matrix:
         - python: 2.7
           env: TOXENV=qa
 
-install: pip install -U pip tox setuptools coveralls
+install: pip install --upgrade pip tox setuptools coveralls
 script: tox -vv
-after_success:
-  - coveralls
+after_success: if [ "$TOXENV" == "py36" ]; then coveralls; fi
