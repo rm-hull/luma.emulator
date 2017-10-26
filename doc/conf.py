@@ -354,7 +354,7 @@ texinfo_documents = [
 
 # Configuration for intersphinx.
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/2', None),
+    'python': ('https://docs.python.org/3', None),
     'pillow': ('https://pillow.readthedocs.io/en/latest', None),
     'luma.core': ('https://luma-core.readthedocs.io/en/latest', None)
 }
