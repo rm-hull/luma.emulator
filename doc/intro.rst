@@ -14,10 +14,5 @@ and screen capture functionality:
 * The :py:class:`luma.emulator.device.pygame` device uses the `pygame` library to
   render the displayed image to a pygame display surface.
 
-Invoke the demos with::
-
-  $ python examples/clock.py --display capture
-
-or::
-
-  $ python examples/clock.py --display pygame
+Check out the `examples <https://github.com/rm-hull/luma.examples/blob/master/README.rst#emulators>`__
+on how to use the luma.emulator devices.
