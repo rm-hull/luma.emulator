@@ -63,7 +63,7 @@ setup(
     zip_safe=False,
     classifiers=[
         "License :: OSI Approved :: MIT License",
-        "Development Status :: 5 - Stable",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Education",
         "Intended Audience :: Developers",
         "Topic :: Education",
