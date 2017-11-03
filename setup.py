@@ -45,7 +45,7 @@ setup(
         "luma/emulator/images/7-segment.png"
     ]},
     install_requires=[
-        "luma.core>=1.0.0",
+        "luma.core>=1.1.0",
         "pygame"
     ],
     setup_requires=pytest_runner,
@@ -63,7 +63,7 @@ setup(
     zip_safe=False,
     classifiers=[
         "License :: OSI Approved :: MIT License",
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Stable",
         "Intended Audience :: Education",
         "Intended Audience :: Developers",
         "Topic :: Education",
