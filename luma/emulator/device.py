@@ -176,7 +176,7 @@ class pygame(emulator):
     def __init__(self, width=128, height=64, rotate=0, mode="RGB", transform="scale2x",
                  scale=2, frame_rate=60, **kwargs):
         super(pygame, self).__init__(width, height, rotate, mode, transform, scale)
-        self._pygame.init()
+        self._pygame.display.init()
         self._pygame.font.init()
         self._pygame.display.set_caption("Luma.core Display Emulator")
         self._clock = self._pygame.time.Clock()
