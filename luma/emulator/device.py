@@ -9,11 +9,7 @@ import logging
 import string
 import curses
 import collections
-try:
-    from StringIO import StringIO
-except ImportError:  # pragma: no cover
-    from io import StringIO
-
+from io import StringIO
 from PIL import Image, ImageFont, ImageDraw
 
 from luma.core.device import device
