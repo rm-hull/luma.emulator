@@ -20,3 +20,17 @@ def rgb2short(r, g, b):
 
     # Simple colorcube transform
     return (r * 36) + (g * 6) + b + 16
+
+
+class __memoize:
+    def __init__(self, f):
+        self.f = f
+        self.memo = {}
+
+    def __call__(self, *args):
+        if args not in self.memo:
+            self.memo[args] = self.f(*args)
+        return self.memo[args]
+
+
+rgb2short = __memoize(rgb2short)

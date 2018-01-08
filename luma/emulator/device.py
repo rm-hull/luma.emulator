@@ -4,6 +4,9 @@
 
 import os
 import sys
+import struct
+import fcntl
+import termios
 import atexit
 import logging
 import string
@@ -21,7 +24,7 @@ from luma.emulator.segment_mapper import regular
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["capture", "gifanim", "pygame", "asciiart"]
+__all__ = ["capture", "gifanim", "pygame", "asciiart", "asciiblock"]
 
 
 class emulator(device):
@@ -310,3 +313,78 @@ class asciiart(emulator):
         sys.stdout.flush()
         sys.stderr.write(self._captured[1].getvalue())
         sys.stderr.flush()
+
+
+class asciiblock(emulator):
+    """
+    Pseudo-device that acts like a physical display, except that it converts
+    the image pixels to display into colored ASCII half-blocks (ASCII code 220,
+    '▄'), where the upper part background is used for one pixel, and the lower
+    part foreground is used for the pixel on the next row. As most terminal
+    display characters are in ratio 2:1, the half-block appears square.
+
+    Inspired by **Command Line Curiosities - Making the Terminal Sing by Hamza Haiken**
+    https://www.youtube.com/watch?v=j5zA5Xi_ph8
+
+    .. versionadded:: 1.1.0
+    """
+    def __init__(self, width=128, height=64, rotate=0, mode="RGB", transform="scale2x",
+                 scale=2, **kwargs):
+
+        super(asciiblock, self).__init__(width, height, rotate, mode, transform, scale)
+        self._CSI("2J")
+
+    def _terminal_size(self):
+        s = struct.pack('HHHH', 0, 0, 0, 0)
+        t = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, s)
+        return struct.unpack('HHHH', t)
+
+    def _generate_art(self, image, width, height):
+        """
+        Return an iterator that produces the ascii art.
+        """
+        image = image.resize((width, height), Image.ANTIALIAS).convert("RGB")
+        pixels = list(image.getdata())
+
+        for y in range(0, height - 1, 2):
+            for x in range(width):
+                i = y * width + x
+                bg = rgb2short(*(pixels[i]))
+                fg = rgb2short(*(pixels[i + width]))
+                yield (fg, bg)
+
+    def _CSI(self, cmd):
+        """
+        Control sequence introducer
+        """
+        sys.stdout.write('\x1b[')
+        sys.stdout.write(cmd)
+
+    def display(self, image):
+        """
+        Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
+        ASCII-blocks.
+        """
+        assert(image.size == self.size)
+        self._last_image = image
+
+        surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
+        rawbytes = self._pygame.image.tostring(surface, "RGB", False)
+        image = Image.frombytes("RGB", surface.get_size(), rawbytes)
+
+        scr_width = self._terminal_size()[1]
+        scale = float(scr_width) / image.width
+
+        self._CSI('1;1H')  # Move to top/left
+
+        for (fg, bg) in self._generate_art(image, int(image.width * scale), int(image.height * scale)):
+            self._CSI('38;5;{0};48;5;{1}m'.format(fg, bg))
+            sys.stdout.write('▄')
+
+        self._CSI('0m')
+        sys.stdout.flush()
+
+    def cleanup(self):
+        super(asciiblock, self).cleanup()
+        self._CSI('0m')
+        self._CSI('2J')
