@@ -31,7 +31,7 @@ without running a physical device. These include:
 * LED matrix and 7-segment renderers
 * PNG screen capture
 * Animated GIF animator
-* Real-time ASCII-art emulator
+* Real-time ASCII-art & block emulators
 
 Documentation
 -------------
