@@ -323,8 +323,7 @@ class asciiblock(emulator):
     part foreground is used for the pixel on the next row. As most terminal
     display characters are in ratio 2:1, the half-block appears square.
 
-    Inspired by **Command Line Curiosities - Making the Terminal Sing by Hamza Haiken**
-    https://www.youtube.com/watch?v=j5zA5Xi_ph8
+    Inspired by `Command Line Curiosities - Making the Terminal Sing by Hamza Haiken <https://www.youtube.com/watch?v=j5zA5Xi_ph8>`__
 
     .. versionadded:: 1.1.0
     """
