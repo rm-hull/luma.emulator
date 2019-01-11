@@ -21,7 +21,7 @@ Luma.Emulator
 .. image:: https://img.shields.io/pypi/v/luma.emulator.svg
    :target: https://pypi.python.org/pypi/luma.emulator
    
-.. image:: https://img.shields.io/maintenance/yes/2018.svg?maxAge=2592000
+.. image:: https://img.shields.io/maintenance/yes/2019.svg?maxAge=2592000
 
 **luma.emulator** provides a series of pseudo-display devices which allow 
 the `luma.core <https://github.com/rm-hull/luma.core>`_ components to be used
