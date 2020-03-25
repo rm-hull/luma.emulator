@@ -3,8 +3,8 @@
 # See LICENSE.rst for details.
 
 import os
-import struct
 import sys
+import struct
 
 try:
     import fcntl
@@ -27,6 +27,7 @@ from luma.emulator.render import transformer
 from luma.emulator.clut import rgb2short
 from luma.emulator.segment_mapper import regular
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -34,7 +35,6 @@ class emulator(device):
     """
     Base class for emulated display driver classes
     """
-
     def __init__(self, width, height, rotate, mode, transform, scale):
         super(emulator, self).__init__(serial_interface=noop())
         try:
@@ -57,7 +57,7 @@ class emulator(device):
         self.contrast(0x00)
 
     def contrast(self, value):
-        assert (0 <= value <= 255)
+        assert(0 <= value <= 255)
         self._contrast = value / 255.0
         if self._last_image is not None:
             self.display(self._last_image)
@@ -71,7 +71,7 @@ class emulator(device):
         transforming it according to the ``transform`` and ``scale``
         constructor arguments.
         """
-        assert (0.0 <= alpha <= 1.0)
+        assert(0.0 <= alpha <= 1.0)
         if alpha < 1.0:
             im = image.convert("RGBA")
             black = Image.new(im.mode, im.size, "black")
@@ -94,7 +94,6 @@ class capture(emulator):
     image to a numbered PNG file when the :func:`display` method is called.
     Supports 24-bit color depth.
     """
-
     def __init__(self, width=128, height=64, rotate=0, mode="RGB",
                  transform="scale2x", scale=2, file_template="luma_{0:06}.png",
                  **kwargs):
@@ -106,7 +105,7 @@ class capture(emulator):
         """
         Takes a :py:mod:`PIL.Image` and dumps it to a numbered PNG file.
         """
-        assert (image.size == self.size)
+        assert(image.size == self.size)
         self._last_image = image
 
         self._count += 1
@@ -124,7 +123,6 @@ class gifanim(emulator):
     assembles them into an animated GIF image. Supports 24-bit color depth,
     albeit with an indexed color palette.
     """
-
     def __init__(self, width=128, height=64, rotate=0, mode="RGB",
                  transform="scale2x", scale=2, filename="luma_anim.gif",
                  duration=0.01, loop=0, max_frames=None, **kwargs):
@@ -142,7 +140,7 @@ class gifanim(emulator):
         Takes an image, scales it according to the nominated transform, and
         stores it for later building into an animated GIF.
         """
-        assert (image.size == self.size)
+        assert(image.size == self.size)
         self._last_image = image
 
         image = self.preprocess(image)
@@ -182,7 +180,6 @@ class pygame(emulator):
     event loop is checked to see if the ESC key was pressed or the window
     was dismissed: if so :func:`sys.exit()` is called.
     """
-
     def __init__(self, width=128, height=64, rotate=0, mode="RGB", transform="scale2x",
                  scale=2, frame_rate=60, **kwargs):
         super(pygame, self).__init__(width, height, rotate, mode, transform, scale)
@@ -201,7 +198,7 @@ class pygame(emulator):
         """
         Takes a :py:mod:`PIL.Image` and renders it to a pygame display surface.
         """
-        assert (image.size == self.size)
+        assert(image.size == self.size)
         self._last_image = image
 
         image = self.preprocess(image)
@@ -223,7 +220,6 @@ __all__ = ["capture", "gifanim", "pygame"]
 if ASCII_AVAILABLE:
     __all__ = ["capture", "gifanim", "pygame", "asciiart", "asciiblock"]
 
-
     class asciiart(emulator):
         """
         Pseudo-device that acts like a physical display, except that it converts the
@@ -238,7 +234,6 @@ if ASCII_AVAILABLE:
 
         .. versionadded:: 0.2.0
         """
-
         def __init__(self, width=128, height=64, rotate=0, mode="RGB", transform="scale2x",
                      scale=2, **kwargs):
 
@@ -290,7 +285,7 @@ if ASCII_AVAILABLE:
             Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
             ASCII-art.
             """
-            assert (image.size == self.size)
+            assert(image.size == self.size)
             self._last_image = image
 
             surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
@@ -327,7 +322,6 @@ if ASCII_AVAILABLE:
             sys.stderr.write(self._captured[1].getvalue())
             sys.stderr.flush()
 
-
     class asciiblock(emulator):
         """
         Pseudo-device that acts like a physical display, except that it converts
@@ -340,17 +334,16 @@ if ASCII_AVAILABLE:
 
         .. versionadded:: 1.1.0
         """
-
         def __init__(self, width=128, height=64, rotate=0, mode="RGB", transform="scale2x",
                      scale=2, **kwargs):
 
             super(asciiblock, self).__init__(width, height, rotate, mode, transform, scale)
             self._CSI("2J")
 
-            def _terminal_size(self):
-                s = struct.pack('HHHH', 0, 0, 0, 0)
-                t = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, s)
-                return struct.unpack('HHHH', t)
+        def _terminal_size(self):
+            s = struct.pack('HHHH', 0, 0, 0, 0)
+            t = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, s)
+            return struct.unpack('HHHH', t)
 
         def _generate_art(self, image, width, height):
             """
@@ -373,29 +366,29 @@ if ASCII_AVAILABLE:
             sys.stdout.write('\x1b[')
             sys.stdout.write(cmd)
 
-            def display(self, image):
-                """
-                Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
-                ASCII-blocks.
-                """
-                assert (image.size == self.size)
-                self._last_image = image
+        def display(self, image):
+            """
+            Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
+            ASCII-blocks.
+            """
+            assert(image.size == self.size)
+            self._last_image = image
 
-                surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
-                rawbytes = self._pygame.image.tostring(surface, "RGB", False)
-                image = Image.frombytes("RGB", surface.get_size(), rawbytes)
+            surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
+            rawbytes = self._pygame.image.tostring(surface, "RGB", False)
+            image = Image.frombytes("RGB", surface.get_size(), rawbytes)
 
-                scr_width = self._terminal_size()[1]
-                scale = float(scr_width) / image.width
+            scr_width = self._terminal_size()[1]
+            scale = float(scr_width) / image.width
 
-                self._CSI('1;1H')  # Move to top/left
+            self._CSI('1;1H')  # Move to top/left
 
-                for (fg, bg) in self._generate_art(image, int(image.width * scale), int(image.height * scale)):
-                    self._CSI('38;5;{0};48;5;{1}m'.format(fg, bg))
-                    sys.stdout.write('▄')
+            for (fg, bg) in self._generate_art(image, int(image.width * scale), int(image.height * scale)):
+                self._CSI('38;5;{0};48;5;{1}m'.format(fg, bg))
+                sys.stdout.write('▄')
 
-                self._CSI('0m')
-                sys.stdout.flush()
+            self._CSI('0m')
+            sys.stdout.flush()
 
         def cleanup(self):
             super(asciiblock, self).cleanup()
