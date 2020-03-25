@@ -20,10 +20,16 @@ def noop():
     pass
 
 
+ASCII_AVAILABLE = True
 try:
     from luma.emulator.device import asciiblock
+except ImportError:
+    ASCII_AVAILABLE = False
 
-    def test_display():
+
+def test_display():
+    # If ascii art works, then do the test otherwise just end the function call
+    if ASCII_AVAILABLE:
         scr_height = 40
         scr_width = 100
         fake_result = struct.pack('HHHH', scr_height, scr_width, 600, 616)
@@ -44,7 +50,10 @@ try:
         digest = hashlib.md5(out).hexdigest()
         assert md5('tests/reference/asciiblock.txt') == digest
 
-    def test_cleanup():
+
+def test_cleanup():
+    # If ascii art works, then do the test otherwise just end the function call
+    if ASCII_AVAILABLE:
         scr_height = 40
         scr_width = 100
         fake_result = struct.pack('HHHH', scr_height, scr_width, 600, 616)
@@ -63,11 +72,3 @@ try:
 
         digest = hashlib.md5(out).hexdigest()
         assert digest == '3139690363a9edf4c03d553b36a37fe6'
-
-except ImportError:
-    def test_display():
-        # Not available on windows
-        pass
-
-    def test_cleanup():
-        pass

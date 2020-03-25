@@ -30,6 +30,8 @@ from luma.emulator.segment_mapper import regular
 
 logger = logging.getLogger(__name__)
 
+__all__ = ["capture", "gifanim", "pygame"]
+
 
 class emulator(device):
     """
@@ -216,9 +218,8 @@ class pygame(emulator):
         self._pygame.display.flip()
 
 
-__all__ = ["capture", "gifanim", "pygame"]
 if ASCII_AVAILABLE:
-    __all__ = ["capture", "gifanim", "pygame", "asciiart", "asciiblock"]
+    __all__.extend(["asciiart", "asciiblock"])
 
     class asciiart(emulator):
         """
