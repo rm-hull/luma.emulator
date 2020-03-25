@@ -5,12 +5,18 @@
 import os
 import sys
 import struct
-import fcntl
-import termios
+
+try:
+    import fcntl
+    import termios
+    import curses
+    ASCII_AVAILABLE = True
+except ImportError:
+    # If running on windows, these package are not available!
+    ASCII_AVAILABLE = False
 import atexit
 import logging
 import string
-import curses
 import collections
 from io import StringIO
 from PIL import Image, ImageFont, ImageDraw
@@ -24,7 +30,7 @@ from luma.emulator.segment_mapper import regular
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["capture", "gifanim", "pygame", "asciiart", "asciiblock"]
+__all__ = ["capture", "gifanim", "pygame"]
 
 
 class emulator(device):
@@ -212,178 +218,180 @@ class pygame(emulator):
         self._pygame.display.flip()
 
 
-class asciiart(emulator):
-    """
-    Pseudo-device that acts like a physical display, except that it converts the
-    image to display into an ASCII-art representation and downscales colors to
-    match the xterm-256 color scheme. Supports 24-bit color depth.
+if ASCII_AVAILABLE:
+    __all__.extend(["asciiart", "asciiblock"])
 
-    This device takes hold of the terminal window (using curses), and any output
-    for sysout and syserr is captured and stored, and is replayed when the
-    cleanup method is called.
-
-    Loosely based on https://github.com/ajalt/pyasciigen/blob/master/asciigen.py
-
-    .. versionadded:: 0.2.0
-    """
-    def __init__(self, width=128, height=64, rotate=0, mode="RGB", transform="scale2x",
-                 scale=2, **kwargs):
-
-        super(asciiart, self).__init__(width, height, rotate, mode, transform, scale)
-        self._stdscr = curses.initscr()
-        curses.start_color()
-        curses.use_default_colors()
-        for i in range(0, curses.COLORS):
-            curses.init_pair(i, i, -1)
-        curses.noecho()
-        curses.cbreak()
-
-        # Capture all stdout, stderr
-        self._old_stdX = (sys.stdout, sys.stderr)
-        self._captured = (StringIO(), StringIO())
-        sys.stdout, sys.stderr = self._captured
-
-        # Sort printable characters according to the number of black pixels present.
-        # Don't use string.printable, since we don't want any whitespace except spaces.
-        charset = (string.ascii_letters + string.digits + string.punctuation + "  ")
-        self._chars = list(reversed(sorted(charset, key=self._char_density)))
-        self._char_width, self._char_height = ImageFont.load_default().getsize("X")
-        self._contrast = 1.0
-
-    def _char_density(self, c, font=ImageFont.load_default()):
+    class asciiart(emulator):
         """
-        Count the number of black pixels in a rendered character.
+        Pseudo-device that acts like a physical display, except that it converts the
+        image to display into an ASCII-art representation and downscales colors to
+        match the xterm-256 color scheme. Supports 24-bit color depth.
+
+        This device takes hold of the terminal window (using curses), and any output
+        for sysout and syserr is captured and stored, and is replayed when the
+        cleanup method is called.
+
+        Loosely based on https://github.com/ajalt/pyasciigen/blob/master/asciigen.py
+
+        .. versionadded:: 0.2.0
         """
-        image = Image.new('1', font.getsize(c), color=255)
-        draw = ImageDraw.Draw(image)
-        draw.text((0, 0), c, fill="white", font=font)
-        return collections.Counter(image.getdata())[0]  # 0 is black
+        def __init__(self, width=128, height=64, rotate=0, mode="RGB", transform="scale2x",
+                     scale=2, **kwargs):
 
-    def _generate_art(self, image, width, height):
+            super(asciiart, self).__init__(width, height, rotate, mode, transform, scale)
+            self._stdscr = curses.initscr()
+            curses.start_color()
+            curses.use_default_colors()
+            for i in range(0, curses.COLORS):
+                curses.init_pair(i, i, -1)
+            curses.noecho()
+            curses.cbreak()
+
+            # Capture all stdout, stderr
+            self._old_stdX = (sys.stdout, sys.stderr)
+            self._captured = (StringIO(), StringIO())
+            sys.stdout, sys.stderr = self._captured
+
+            # Sort printable characters according to the number of black pixels present.
+            # Don't use string.printable, since we don't want any whitespace except spaces.
+            charset = (string.ascii_letters + string.digits + string.punctuation + "  ")
+            self._chars = list(reversed(sorted(charset, key=self._char_density)))
+            self._char_width, self._char_height = ImageFont.load_default().getsize("X")
+            self._contrast = 1.0
+
+        def _char_density(self, c, font=ImageFont.load_default()):
+            """
+            Count the number of black pixels in a rendered character.
+            """
+            image = Image.new('1', font.getsize(c), color=255)
+            draw = ImageDraw.Draw(image)
+            draw.text((0, 0), c, fill="white", font=font)
+            return collections.Counter(image.getdata())[0]  # 0 is black
+
+        def _generate_art(self, image, width, height):
+            """
+            Return an iterator that produces the ascii art.
+            """
+            # Characters aren't square, so scale the output by the aspect ratio of a charater
+            height = int(height * self._char_width / float(self._char_height))
+            image = image.resize((width, height), Image.ANTIALIAS).convert("RGB")
+
+            for (r, g, b) in image.getdata():
+                greyscale = int(0.299 * r + 0.587 * g + 0.114 * b)
+                ch = self._chars[int(greyscale / 255. * (len(self._chars) - 1) + 0.5)]
+                yield (ch, rgb2short(r, g, b))
+
+        def display(self, image):
+            """
+            Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
+            ASCII-art.
+            """
+            assert(image.size == self.size)
+            self._last_image = image
+
+            surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
+            rawbytes = self._pygame.image.tostring(surface, "RGB", False)
+            image = Image.frombytes("RGB", surface.get_size(), rawbytes)
+
+            scr_width = self._stdscr.getmaxyx()[1]
+            scale = float(scr_width) / image.width
+
+            self._stdscr.erase()
+            self._stdscr.move(0, 0)
+            try:
+                for (ch, color) in self._generate_art(image, int(image.width * scale), int(image.height * scale)):
+                    self._stdscr.addstr(ch, curses.color_pair(color))
+
+            except curses.error:
+                # End of screen reached
+                pass
+
+            self._stdscr.refresh()
+
+        def cleanup(self):
+            super(asciiart, self).cleanup()
+
+            # Stty sane
+            curses.nocbreak()
+            curses.echo()
+            curses.endwin()
+
+            # Restore stdout & stderr, then print out captured
+            sys.stdout, sys.stderr = self._old_stdX
+            sys.stdout.write(self._captured[0].getvalue())
+            sys.stdout.flush()
+            sys.stderr.write(self._captured[1].getvalue())
+            sys.stderr.flush()
+
+    class asciiblock(emulator):
         """
-        Return an iterator that produces the ascii art.
+        Pseudo-device that acts like a physical display, except that it converts
+        the image pixels to display into colored ASCII half-blocks (ASCII code 220,
+        '▄'), where the upper part background is used for one pixel, and the lower
+        part foreground is used for the pixel on the next row. As most terminal
+        display characters are in ratio 2:1, the half-block appears square.
+
+        Inspired by `Command Line Curiosities - Making the Terminal Sing by Hamza Haiken <https://www.youtube.com/watch?v=j5zA5Xi_ph8>`__
+
+        .. versionadded:: 1.1.0
         """
-        # Characters aren't square, so scale the output by the aspect ratio of a charater
-        height = int(height * self._char_width / float(self._char_height))
-        image = image.resize((width, height), Image.ANTIALIAS).convert("RGB")
+        def __init__(self, width=128, height=64, rotate=0, mode="RGB", transform="scale2x",
+                     scale=2, **kwargs):
 
-        for (r, g, b) in image.getdata():
-            greyscale = int(0.299 * r + 0.587 * g + 0.114 * b)
-            ch = self._chars[int(greyscale / 255. * (len(self._chars) - 1) + 0.5)]
-            yield (ch, rgb2short(r, g, b))
+            super(asciiblock, self).__init__(width, height, rotate, mode, transform, scale)
+            self._CSI("2J")
 
-    def display(self, image):
-        """
-        Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
-        ASCII-art.
-        """
-        assert(image.size == self.size)
-        self._last_image = image
+        def _terminal_size(self):
+            s = struct.pack('HHHH', 0, 0, 0, 0)
+            t = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, s)
+            return struct.unpack('HHHH', t)
 
-        surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
-        rawbytes = self._pygame.image.tostring(surface, "RGB", False)
-        image = Image.frombytes("RGB", surface.get_size(), rawbytes)
+        def _generate_art(self, image, width, height):
+            """
+            Return an iterator that produces the ascii art.
+            """
+            image = image.resize((width, height), Image.ANTIALIAS).convert("RGB")
+            pixels = list(image.getdata())
 
-        scr_width = self._stdscr.getmaxyx()[1]
-        scale = float(scr_width) / image.width
+            for y in range(0, height - 1, 2):
+                for x in range(width):
+                    i = y * width + x
+                    bg = rgb2short(*(pixels[i]))
+                    fg = rgb2short(*(pixels[i + width]))
+                    yield (fg, bg)
 
-        self._stdscr.erase()
-        self._stdscr.move(0, 0)
-        try:
-            for (ch, color) in self._generate_art(image, int(image.width * scale), int(image.height * scale)):
-                self._stdscr.addstr(ch, curses.color_pair(color))
+        def _CSI(self, cmd):
+            """
+            Control sequence introducer
+            """
+            sys.stdout.write('\x1b[')
+            sys.stdout.write(cmd)
 
-        except curses.error:
-            # End of screen reached
-            pass
+        def display(self, image):
+            """
+            Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
+            ASCII-blocks.
+            """
+            assert(image.size == self.size)
+            self._last_image = image
 
-        self._stdscr.refresh()
+            surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
+            rawbytes = self._pygame.image.tostring(surface, "RGB", False)
+            image = Image.frombytes("RGB", surface.get_size(), rawbytes)
 
-    def cleanup(self):
-        super(asciiart, self).cleanup()
+            scr_width = self._terminal_size()[1]
+            scale = float(scr_width) / image.width
 
-        # Stty sane
-        curses.nocbreak()
-        curses.echo()
-        curses.endwin()
+            self._CSI('1;1H')  # Move to top/left
 
-        # Restore stdout & stderr, then print out captured
-        sys.stdout, sys.stderr = self._old_stdX
-        sys.stdout.write(self._captured[0].getvalue())
-        sys.stdout.flush()
-        sys.stderr.write(self._captured[1].getvalue())
-        sys.stderr.flush()
+            for (fg, bg) in self._generate_art(image, int(image.width * scale), int(image.height * scale)):
+                self._CSI('38;5;{0};48;5;{1}m'.format(fg, bg))
+                sys.stdout.write('▄')
 
+            self._CSI('0m')
+            sys.stdout.flush()
 
-class asciiblock(emulator):
-    """
-    Pseudo-device that acts like a physical display, except that it converts
-    the image pixels to display into colored ASCII half-blocks (ASCII code 220,
-    '▄'), where the upper part background is used for one pixel, and the lower
-    part foreground is used for the pixel on the next row. As most terminal
-    display characters are in ratio 2:1, the half-block appears square.
-
-    Inspired by `Command Line Curiosities - Making the Terminal Sing by Hamza Haiken <https://www.youtube.com/watch?v=j5zA5Xi_ph8>`__
-
-    .. versionadded:: 1.1.0
-    """
-    def __init__(self, width=128, height=64, rotate=0, mode="RGB", transform="scale2x",
-                 scale=2, **kwargs):
-
-        super(asciiblock, self).__init__(width, height, rotate, mode, transform, scale)
-        self._CSI("2J")
-
-    def _terminal_size(self):
-        s = struct.pack('HHHH', 0, 0, 0, 0)
-        t = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, s)
-        return struct.unpack('HHHH', t)
-
-    def _generate_art(self, image, width, height):
-        """
-        Return an iterator that produces the ascii art.
-        """
-        image = image.resize((width, height), Image.ANTIALIAS).convert("RGB")
-        pixels = list(image.getdata())
-
-        for y in range(0, height - 1, 2):
-            for x in range(width):
-                i = y * width + x
-                bg = rgb2short(*(pixels[i]))
-                fg = rgb2short(*(pixels[i + width]))
-                yield (fg, bg)
-
-    def _CSI(self, cmd):
-        """
-        Control sequence introducer
-        """
-        sys.stdout.write('\x1b[')
-        sys.stdout.write(cmd)
-
-    def display(self, image):
-        """
-        Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
-        ASCII-blocks.
-        """
-        assert(image.size == self.size)
-        self._last_image = image
-
-        surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
-        rawbytes = self._pygame.image.tostring(surface, "RGB", False)
-        image = Image.frombytes("RGB", surface.get_size(), rawbytes)
-
-        scr_width = self._terminal_size()[1]
-        scale = float(scr_width) / image.width
-
-        self._CSI('1;1H')  # Move to top/left
-
-        for (fg, bg) in self._generate_art(image, int(image.width * scale), int(image.height * scale)):
-            self._CSI('38;5;{0};48;5;{1}m'.format(fg, bg))
-            sys.stdout.write('▄')
-
-        self._CSI('0m')
-        sys.stdout.flush()
-
-    def cleanup(self):
-        super(asciiblock, self).cleanup()
-        self._CSI('0m')
-        self._CSI('2J')
+        def cleanup(self):
+            super(asciiblock, self).cleanup()
+            self._CSI('0m')
+            self._CSI('2J')
