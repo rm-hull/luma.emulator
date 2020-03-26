@@ -21,6 +21,7 @@ addons:
     apt:
         packages:
             - graphviz
+            - python3-pygame
 
 install: pip install --upgrade --ignore-installed setuptools pip tox coveralls
 script: tox -vv
