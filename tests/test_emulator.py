@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
 Tests for :py:class:`luma.emulator.device.emulator`.
 """
+
+from unittest.mock import patch
 
 from luma.emulator.device import emulator
 
@@ -14,8 +16,6 @@ import pytest
 import pygame
 
 from PIL import Image, ImageDraw
-
-from helpers import patch
 
 
 def test_cleanup():
