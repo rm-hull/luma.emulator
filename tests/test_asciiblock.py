@@ -10,7 +10,7 @@ Tests for :py:class:`luma.emulator.device.asciiblock`.
 import hashlib
 import struct
 import sys
-from mock import patch
+from unittest.mock import patch
 
 from luma.core.render import canvas
 import baseline_data

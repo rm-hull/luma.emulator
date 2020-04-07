@@ -7,7 +7,7 @@
 Tests for :py:class:`luma.emulator.device.emulator`.
 """
 
-from mock import patch
+from unittest.mock import patch
 
 from luma.emulator.device import emulator
 
