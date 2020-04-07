@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 from contextlib import contextmanager
 import hashlib
 import os.path
 import sys
-
-if sys.version_info > (3, 0):
-    from io import StringIO
-else:
-    from io import BytesIO as StringIO
-
-
-try:
-    from unittest.mock import call, patch
-except ImportError:
-    from mock import call, patch, Mock  # noqa: F401
+from io import StringIO
 
 
 def md5(fname):

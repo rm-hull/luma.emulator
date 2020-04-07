@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018 Richard Hull and contributors
+# Copyright (c) 2018-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -10,10 +10,11 @@ Tests for :py:class:`luma.emulator.device.asciiblock`.
 import hashlib
 import struct
 import sys
+from mock import patch
 
 from luma.core.render import canvas
 import baseline_data
-from helpers import patch, md5, redirect_stdout
+from helpers import md5, redirect_stdout
 
 
 def noop():
@@ -42,10 +43,7 @@ def test_display():
                     baseline_data.primitives(device, draw)
 
         device.cleanup = noop
-        out = f.getvalue()
-
-        if sys.version_info > (3, 0):
-            out = out.encode('utf-8')
+        out = f.getvalue().encode('utf-8')
 
         digest = hashlib.md5(out).hexdigest()
         assert md5('tests/reference/asciiblock.txt') == digest
@@ -65,10 +63,7 @@ def test_cleanup():
                 device.cleanup()
 
         device.cleanup = noop
-        out = f.getvalue()
-
-        if sys.version_info > (3, 0):
-            out = out.encode('utf-8')
+        out = f.getvalue().encode('utf-8')
 
         digest = hashlib.md5(out).hexdigest()
         assert digest == '3139690363a9edf4c03d553b36a37fe6'
