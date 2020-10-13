@@ -7,7 +7,7 @@
 Tests for :py:class:`luma.emulator.device.gifanim`.
 """
 
-import os.path
+from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from PIL import Image
@@ -44,7 +44,7 @@ def test_gifanim_noimages():
         fname = temp.name
         device = gifanim(filename=fname)
         device.write_animation()
-    assert not os.path.exists(fname)
+    assert not Path(fname).exists()
 
 
 def test_gifanim_max_frames():

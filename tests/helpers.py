@@ -2,11 +2,11 @@
 # Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-from contextlib import contextmanager
-import hashlib
-import os.path
 import sys
+import hashlib
+from pathlib import Path
 from io import StringIO
+from contextlib import contextmanager
 
 
 def md5(fname):
@@ -15,10 +15,14 @@ def md5(fname):
 
 
 def get_reference_image(fname):
-    return os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        'reference',
-        fname))
+    """
+    Get absolute path for ``fname``.
+
+    :param fname: Filename.
+    :type fname: str or pathlib.Path
+    :rtype: str
+    """
+    return str(Path(__file__).resolve().parent.joinpath('reference', fname))
 
 
 def assert_identical(rname, fname):
