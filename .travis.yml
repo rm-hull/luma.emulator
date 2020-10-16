@@ -15,6 +15,9 @@ matrix:
         - python: 3.8
           env: TOXENV=qa,doc
 
+allow_failures:
+  - python: "3.9-dev"
+
 addons:
     apt:
         packages:
