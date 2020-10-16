@@ -7,9 +7,10 @@
 Tests for :py:class:`luma.emulator.device.asciiblock`.
 """
 
-import hashlib
-import struct
 import sys
+import struct
+import hashlib
+from pathlib import Path
 from unittest.mock import patch
 
 from luma.core.render import canvas
@@ -46,7 +47,8 @@ def test_display():
         out = f.getvalue().encode('utf-8')
 
         digest = hashlib.md5(out).hexdigest()
-        assert md5('tests/reference/asciiblock.txt') == digest
+        fname = Path(__file__).resolve().parent.joinpath('reference', 'asciiblock.txt')
+        assert md5(str(fname)) == digest
 
 
 def test_cleanup():
