@@ -17,7 +17,7 @@ from helpers import assert_identical
 
 
 def test_display():
-    with NamedTemporaryFile(suffix='.png') as temp:
+    with NamedTemporaryFile(suffix='.png', delete=True) as temp:
         fname = temp.name
         device = capture(file_template=fname, transform="none")
 
