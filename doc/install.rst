@@ -1,21 +1,13 @@
 Installation
 ------------
-.. note:: The library has been tested against Python 2.7 and 3.4+.
-
-   For **Python3** installation, substitute the following in the
-   instructions below.
-
-   * ``pip`` ⇒ ``pip3``, 
-   * ``python`` ⇒ ``python3``, 
-   * ``python-dev`` ⇒ ``python3-dev``,
-   * ``python-pip`` ⇒ ``python3-pip``.
+.. note:: The library has been tested against Python 3.5 and newer.
 
 System packages
 ^^^^^^^^^^^^^^^
 
 Install dependencies for pygame first::
 
-  $ sudo apt install python-dev python-pip build-essential
+  $ sudo apt install python3-dev python3-pip build-essential
   $ sudo apt install libsdl-dev libportmidi-dev libsdl-ttf2.0-dev libsdl-mixer1.2-dev libsdl-image1.2-dev
 
 And upgrade ``pip`` and ``setuptools``::

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-import os
+from pathlib import Path
 
 
 __all__ = ["transformer"]
@@ -17,9 +17,9 @@ class transformer(object):
         self._input_size = (width, height)
         self._output_size = (width * scale, height * scale)
         self._scale = scale
-        base_dir = os.path.dirname(__file__)
+        base_dir = Path(__file__).resolve().parent
         self._led_on, self._led_off, self._sevenseg = \
-            [self._pygame.image.load(os.path.join(base_dir, "images", img))
+            [self._pygame.image.load(str(base_dir.joinpath("images", img)))
              for img in ["led_on.png", "led_off.png", "7-segment.png"]]
 
     def none(self, surface):

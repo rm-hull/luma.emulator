@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-from contextlib import contextmanager
-import hashlib
-import os.path
 import sys
-
-if sys.version_info > (3, 0):
-    from io import StringIO
-else:
-    from io import BytesIO as StringIO
-
-
-try:
-    from unittest.mock import call, patch
-except ImportError:
-    from mock import call, patch, Mock  # noqa: F401
+import hashlib
+from pathlib import Path
+from io import StringIO
+from contextlib import contextmanager
 
 
 def md5(fname):
@@ -25,10 +15,14 @@ def md5(fname):
 
 
 def get_reference_image(fname):
-    return os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        'reference',
-        fname))
+    """
+    Get absolute path for ``fname``.
+
+    :param fname: Filename.
+    :type fname: str or pathlib.Path
+    :rtype: str
+    """
+    return str(Path(__file__).resolve().parent.joinpath('reference', fname))
 
 
 def assert_identical(rname, fname):

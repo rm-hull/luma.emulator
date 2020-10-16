@@ -4,8 +4,6 @@ cache: pip
 
 matrix:
     include:
-        - python: 2.7
-          env: TOXENV=py27
         - python: 3.5
           env: TOXENV=py35
         - python: 3.6
@@ -21,7 +19,6 @@ addons:
     apt:
         packages:
             - graphviz
-            - python-pygame
             - libsdl-dev
             - python3-dev
             - python3-numpy
