@@ -74,7 +74,7 @@ setup(
         'test': test_deps
     },
     zip_safe=False,
-    python_requires='>=3.5, <4',
+    python_requires='>=3.6, <4',
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Development Status :: 5 - Production/Stable",
@@ -85,9 +85,9 @@ setup(
         "Topic :: System :: Hardware :: Hardware Drivers",
         "Topic :: Software Development :: Libraries :: pygame",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8"
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9"
     ]
 )
