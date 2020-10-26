@@ -33,8 +33,9 @@ version = find_version('luma', 'emulator', '__init__.py')
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
 test_deps = [
-    'pytest<=4.5',
-    'pytest-cov'
+    'pytest',
+    'pytest-cov',
+    'pytest-timeout'
 ]
 
 setup(
