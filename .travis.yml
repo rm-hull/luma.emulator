@@ -1,4 +1,4 @@
-dist: bionic
+dist: focal
 language: python
 cache: pip
 
@@ -10,12 +10,12 @@ matrix:
           env: TOXENV=py37
         - python: 3.8
           env: TOXENV=py38
-        - python: 3.9-dev
+        - python: 3.9
           env: TOXENV=py39
         - python: 3.8
           env: TOXENV=qa,doc
     allow_failures:
-        - python: "3.9-dev"
+        - python: "3.9"
 
 addons:
     apt:
@@ -34,6 +34,8 @@ addons:
             - libjpeg-dev
             - libfreetype6-dev
 
-install: pip install --upgrade --ignore-installed setuptools pip tox coveralls
+install:
+  - pip uninstall virtualenv -y
+  - pip install --upgrade --ignore-installed setuptools pip tox coveralls
 script: tox -vv
 after_success: if [ "$TOXENV" == "py38" ]; then coveralls; fi
