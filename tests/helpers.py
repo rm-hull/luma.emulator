@@ -26,8 +26,19 @@ def get_reference_image(fname):
 
 
 def assert_identical(rname, fname):
+    """
+    Files that are compared have the same MD5 hash.
+
+    :param rname: Reference file location.
+    :type rname: str
+    :param fname: Target file location.
+    :type fname: str
+    """
     reference = get_reference_image(rname)
-    assert md5(reference) == md5(fname)
+    md5_ref = md5(reference)
+    md5_target = md5(fname)
+    assert md5_ref == md5_target,\
+        f"Files are not identical.\nReference: {reference} ({md5_ref})\nTarget: {fname} ({md5_target})"
 
 
 @contextmanager

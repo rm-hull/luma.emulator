@@ -1,6 +1,6 @@
 Installation
 ------------
-.. note:: The library has been tested against Python 3.5 and newer.
+.. note:: The library has been tested against Python 3.6 and newer.
 
 System packages
 ^^^^^^^^^^^^^^^
