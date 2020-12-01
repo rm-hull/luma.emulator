@@ -14,6 +14,9 @@ Luma.Emulator
 .. image:: https://img.shields.io/pypi/v/luma.emulator.svg
    :target: https://pypi.python.org/pypi/luma.emulator
 
+.. image:: https://img.shields.io/pypi/dm/luma.emulator
+   :target: https://pypi.python.org/project/luma.emulator
+
 .. toctree::
    :maxdepth: 2
 
