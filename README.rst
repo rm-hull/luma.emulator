@@ -9,8 +9,8 @@ luma.emulator **|**
 Luma.Emulator
 =============
 
-.. image:: https://travis-ci.org/rm-hull/luma.emulator.svg?branch=master
-   :target: https://travis-ci.org/rm-hull/luma.emulator
+.. image:: https://github.com/rm-hull/luma.emulator/workflows/luma.emulator/badge.svg?branch=master
+   :target: https://github.com/rm-hull/luma.emulator/actions?workflow=luma.emulator
 
 .. image:: https://coveralls.io/repos/github/rm-hull/luma.emulator/badge.svg?branch=master
    :target: https://coveralls.io/github/rm-hull/luma.emulator?branch=master
