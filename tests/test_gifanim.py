@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2021 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -57,3 +57,4 @@ def test_gifanim_max_frames():
         with pytest.raises(SystemExit) as ex:
             device.display(img)
         assert str(ex.value) == '0'
+    img.close()
