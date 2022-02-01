@@ -8,7 +8,7 @@ System packages
 Install dependencies for pygame first::
 
   $ sudo apt install python3-dev python3-pip build-essential
-  $ sudo apt install libsdl-dev libportmidi-dev libsdl-ttf2.0-dev libsdl-mixer1.2-dev libsdl-image1.2-dev
+  $ sudo apt install libsdl-dev libportmidi-dev libsdl-ttf2.0-dev libsdl-mixer1.2-dev libsdl2-image-2.0-0
 
 And upgrade ``pip`` and ``setuptools``::
 
