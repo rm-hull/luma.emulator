@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import os
@@ -59,7 +59,7 @@ class emulator(device):
         self.contrast(0x00)
 
     def contrast(self, value):
-        assert(0 <= value <= 255)
+        assert 0 <= value <= 255
         self._contrast = value / 255.0
         if self._last_image is not None:
             self.display(self._last_image)
@@ -73,7 +73,7 @@ class emulator(device):
         transforming it according to the ``transform`` and ``scale``
         constructor arguments.
         """
-        assert(0.0 <= alpha <= 1.0)
+        assert 0.0 <= alpha <= 1.0
         if alpha < 1.0:
             im = image.convert("RGBA")
             black = Image.new(im.mode, im.size, "black")
@@ -107,7 +107,7 @@ class capture(emulator):
         """
         Takes a :py:mod:`PIL.Image` and dumps it to a numbered PNG file.
         """
-        assert(image.size == self.size)
+        assert image.size == self.size
         self._last_image = image
 
         self._count += 1
@@ -142,7 +142,7 @@ class gifanim(emulator):
         Takes an image, scales it according to the nominated transform, and
         stores it for later building into an animated GIF.
         """
-        assert(image.size == self.size)
+        assert image.size == self.size
         self._last_image = image
 
         image = self.preprocess(image)
@@ -200,7 +200,7 @@ class pygame(emulator):
         """
         Takes a :py:mod:`PIL.Image` and renders it to a pygame display surface.
         """
-        assert(image.size == self.size)
+        assert image.size == self.size
         self._last_image = image
 
         image = self.preprocess(image)
@@ -286,7 +286,7 @@ if ASCII_AVAILABLE:
             Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
             ASCII-art.
             """
-            assert(image.size == self.size)
+            assert image.size == self.size
             self._last_image = image
 
             surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
@@ -372,7 +372,7 @@ if ASCII_AVAILABLE:
             Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
             ASCII-blocks.
             """
-            assert(image.size == self.size)
+            assert image.size == self.size
             self._last_image = image
 
             surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
