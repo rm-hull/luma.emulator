@@ -152,7 +152,7 @@ class gifanim(emulator):
         self._images.append(im)
 
         self._count += 1
-        logger.debug("Recording frame: {0}".format(self._count))
+        logger.debug(f"Recording frame: {self._count}")
 
         if self._max_frames and self._count >= self._max_frames:
             sys.exit(0)
@@ -167,8 +167,7 @@ class gifanim(emulator):
                                      optimize=True, format="GIF")
 
             file_size = os.stat(self._filename).st_size
-            logger.debug("Wrote {0} frames to file: {1} ({2} bytes)".format(
-                self._count, self._filename, file_size))
+            logger.debug(f"Wrote {self._count} frames to file: {self._filename} ({file_size} bytes)")
 
 
 class pygame(emulator):
@@ -385,7 +384,7 @@ if ASCII_AVAILABLE:
             self._CSI('1;1H')  # Move to top/left
 
             for (fg, bg) in self._generate_art(image, int(image.width * scale), int(image.height * scale)):
-                self._CSI('38;5;{0};48;5;{1}m'.format(fg, bg))
+                self._CSI(f'38;5;{fg};48;5;{bg}m')
                 sys.stdout.write('▄')
 
             self._CSI('0m')
