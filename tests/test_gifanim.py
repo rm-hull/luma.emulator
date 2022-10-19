@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2021 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -17,8 +17,8 @@ from luma.emulator.device import gifanim
 
 import pytest
 
-import baseline_data
-from helpers import get_reference_image, assert_identical
+from .baseline_data import primitives
+from .helpers import get_reference_image, assert_identical
 
 
 def test_gifanim_write():
@@ -27,13 +27,13 @@ def test_gifanim_write():
         device = gifanim(filename=fname)
 
         with canvas(device) as draw:
-            baseline_data.primitives(device, draw)
+            primitives(device, draw)
 
         with canvas(device) as draw:
             draw.text((30, 10), text="Blipvert", fill="white")
 
         with canvas(device) as draw:
-            baseline_data.primitives(device, draw)
+            primitives(device, draw)
 
         device.write_animation()
         assert_identical('anim.gif', fname)

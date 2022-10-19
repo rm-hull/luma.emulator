@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -14,7 +14,7 @@ from luma.core.device import dummy
 from luma.core.render import canvas
 from luma.emulator.render import transformer
 
-from helpers import get_reference_image
+from .helpers import get_reference_image
 
 
 def baseline_im():
