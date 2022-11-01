@@ -349,7 +349,7 @@ if ASCII_AVAILABLE:
             """
             Return an iterator that produces the ascii art.
             """
-            image = image.resize((width, height), Image.LANCZOS).convert("RGB")
+            image = image.resize((width, height), Image.Resampling.LANCZOS).convert("RGB")
             pixels = list(image.getdata())
 
             for y in range(0, height - 1, 2):
