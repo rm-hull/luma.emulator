@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2022 Richard Hull and contributors
+# Copyright (c) 2017-2023 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import sys
@@ -42,6 +42,7 @@ def assert_identical(rname, fname):
 - generated: {fname} (MD5: {md5_target})
 - reference: {reference} (MD5: {md5_ref})
         """
+
 
 @contextmanager
 def redirect_stdout(fileobj=None):
