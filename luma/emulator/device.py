@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2022 Richard Hull and contributors
+# Copyright (c) 2017-2023 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import os
@@ -349,7 +349,7 @@ if ASCII_AVAILABLE:
             """
             Return an iterator that produces the ascii art.
             """
-            image = image.resize((width, height), Image.Resampling.LANCZOS).convert("RGB")
+            image = image.resize((width, height), Image.LANCZOS).convert("RGB")
             pixels = list(image.getdata())
 
             for y in range(0, height - 1, 2):
