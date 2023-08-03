@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2023 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import sys
@@ -37,8 +37,11 @@ def assert_identical(rname, fname):
     reference = get_reference_image(rname)
     md5_ref = md5(reference)
     md5_target = md5(fname)
-    assert md5_ref == md5_target,\
-        f"Files are not identical.\nReference: {reference} ({md5_ref})\nTarget: {fname} ({md5_target})"
+    assert md5_ref == md5_target, \
+        f"""Generated file is not identical to {rname}
+- generated: {fname} (MD5: {md5_target})
+- reference: {reference} (MD5: {md5_ref})
+        """
 
 
 @contextmanager

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 from pathlib import Path
@@ -33,7 +33,7 @@ class transformer(object):
         Scales using the AdvanceMAME Scale2X algorithm which does a
         'jaggie-less' scale of bitmap graphics.
         """
-        assert(self._scale == 2)
+        assert self._scale == 2
         return self._pygame.transform.scale2x(surface)
 
     def smoothscale(self, surface):
