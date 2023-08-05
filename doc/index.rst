@@ -7,8 +7,6 @@ Luma.Emulator
 .. image:: https://coveralls.io/repos/github/rm-hull/luma.emulator/badge.svg?branch=master
    :target: https://coveralls.io/github/rm-hull/luma.emulator?branch=master
 
-.. image:: https://img.shields.io/maintenance/yes/2021.svg?maxAge=2592000
-
 .. image:: https://img.shields.io/pypi/pyversions/luma.emulator.svg
     :target: https://pypi.python.org/pypi/luma.emulator
 

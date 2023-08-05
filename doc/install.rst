@@ -1,14 +1,14 @@
 Installation
 ------------
-.. note:: The library has been tested against Python 3.6 and newer.
+.. note:: The library is supported for Python 3.7 and newer.
 
 System packages
 ^^^^^^^^^^^^^^^
 
 Install dependencies for pygame first::
 
-  $ sudo apt install python3-dev python3-pip build-essential
-  $ sudo apt install libsdl-dev libportmidi-dev libsdl-ttf2.0-dev libsdl-mixer1.2-dev libsdl2-image-2.0-0
+  $ sudo apt install python3-dev python3-pip python3-numpy libfreetype6-dev libjpeg-dev build-essential
+  $ sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 
 And upgrade ``pip`` and ``setuptools``::
 

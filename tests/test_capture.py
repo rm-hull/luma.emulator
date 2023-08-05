@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -12,8 +12,8 @@ from tempfile import NamedTemporaryFile
 from luma.core.render import canvas
 from luma.emulator.device import capture
 
-import baseline_data
-from helpers import assert_identical
+from .baseline_data import primitives
+from .helpers import assert_identical
 
 
 def test_display():
@@ -23,6 +23,6 @@ def test_display():
 
         # Use the same drawing primitives as the demo
         with canvas(device) as draw:
-            baseline_data.primitives(device, draw)
+            primitives(device, draw)
 
         assert_identical('capture.png', fname)

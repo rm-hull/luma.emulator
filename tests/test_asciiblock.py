@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018-2020 Richard Hull and contributors
+# Copyright (c) 2018-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -14,8 +14,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 from luma.core.render import canvas
-import baseline_data
-from helpers import md5, redirect_stdout
+
+from .baseline_data import primitives
+from .helpers import md5, redirect_stdout
 
 
 def noop():
@@ -41,7 +42,7 @@ def test_display():
             with patch('fcntl.ioctl', return_value=fake_result):
                 device = asciiblock()
                 with canvas(device) as draw:
-                    baseline_data.primitives(device, draw)
+                    primitives(device, draw)
 
         device.cleanup = noop
         out = f.getvalue().encode('utf-8')
