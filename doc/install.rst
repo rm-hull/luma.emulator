@@ -12,7 +12,7 @@ Install dependencies for pygame first::
 
 And upgrade ``pip`` and ``setuptools``::
 
-  $ sudo -H pip install --upgrade --ignore-installed pip setuptools
+  $ sudo -H pip3 install --upgrade --ignore-installed pip setuptools
 
 Installing from PyPi
 ^^^^^^^^^^^^^^^^^^^^
@@ -20,4 +20,4 @@ Installing from PyPi
 Install the latest version of the luma.emulator library directly from
 `PyPI <https://pypi.python.org/pypi?:action=display&name=luma.emulator>`_::
 
-  $ sudo -H pip install --upgrade luma.emulator
+  $ sudo -H pip3 install --upgrade luma.emulator
