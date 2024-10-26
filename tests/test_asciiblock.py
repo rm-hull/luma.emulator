@@ -17,6 +17,7 @@ from luma.core.render import canvas
 from .baseline_data import primitives
 from .helpers import md5, redirect_stdout, get_reference_file
 
+
 def noop():
     pass
 
