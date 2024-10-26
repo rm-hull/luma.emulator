@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2023 Richard Hull and contributors
+# Copyright (c) 2017-2024 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import sys
@@ -7,6 +7,7 @@ import hashlib
 from pathlib import Path
 from io import StringIO
 from contextlib import contextmanager
+from PIL import ImageFont
 
 
 def md5(fname):
@@ -14,7 +15,7 @@ def md5(fname):
         return hashlib.md5(fp.read()).hexdigest()
 
 
-def get_reference_image(fname):
+def get_reference_file(fname):
     """
     Get absolute path for ``fname``.
 
@@ -23,6 +24,22 @@ def get_reference_image(fname):
     :rtype: str
     """
     return str(Path(__file__).resolve().parent.joinpath('reference', fname))
+
+
+def get_reference_pillow_font(fname):
+    """
+    Load :py:class:`PIL.ImageFont` type font from provided fname
+
+    :param fname: The name of the file that contains the PIL.ImageFont
+    :type fname: str
+    :rtype: :py:class:`PIL.ImageFont`
+    """
+    path = get_reference_file(Path('font').joinpath(fname))
+    return ImageFont.load(path)
+
+
+# font used in (most) tests
+test_font = get_reference_pillow_font('courB08.pil')
 
 
 def assert_identical(rname, fname):
@@ -34,7 +51,7 @@ def assert_identical(rname, fname):
     :param fname: Target file location.
     :type fname: str
     """
-    reference = get_reference_image(rname)
+    reference = get_reference_file(rname)
     md5_ref = md5(reference)
     md5_target = md5(fname)
     assert md5_ref == md5_target, \
