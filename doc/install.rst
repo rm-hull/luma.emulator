@@ -20,4 +20,4 @@ Installing from PyPi
 Install the latest version of the luma.emulator library directly from
 `PyPI <https://pypi.python.org/pypi?:action=display&name=luma.emulator>`_::
 
-  $ sudo -H pip install --upgrade luma.emulator
+  $ pip install luma.emulator
