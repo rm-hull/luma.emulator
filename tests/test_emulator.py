@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2023 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -42,7 +42,7 @@ def test_alpha():
 
     im = Image.new('RGB', (w, h), (255, 0, 0))
     dr = ImageDraw.Draw(im)
-    dr.ellipse((w / 2, h / 2, 10, 10), fill='black', outline='blue')
+    dr.ellipse((w / 2, h / 2, w / 2, h / 2), fill='black', outline='blue')
     surf = device.to_surface(im, alpha=0.5)
 
     assert isinstance(surf, pygame.Surface)

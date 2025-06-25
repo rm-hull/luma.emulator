@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2023 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import os
@@ -59,7 +59,7 @@ class emulator(device):
         self.contrast(0x00)
 
     def contrast(self, value):
-        assert(0 <= value <= 255)
+        assert 0 <= value <= 255
         self._contrast = value / 255.0
         if self._last_image is not None:
             self.display(self._last_image)
@@ -73,7 +73,7 @@ class emulator(device):
         transforming it according to the ``transform`` and ``scale``
         constructor arguments.
         """
-        assert(0.0 <= alpha <= 1.0)
+        assert 0.0 <= alpha <= 1.0
         if alpha < 1.0:
             im = image.convert("RGBA")
             black = Image.new(im.mode, im.size, "black")
@@ -107,7 +107,7 @@ class capture(emulator):
         """
         Takes a :py:mod:`PIL.Image` and dumps it to a numbered PNG file.
         """
-        assert(image.size == self.size)
+        assert image.size == self.size
         self._last_image = image
 
         self._count += 1
@@ -142,7 +142,7 @@ class gifanim(emulator):
         Takes an image, scales it according to the nominated transform, and
         stores it for later building into an animated GIF.
         """
-        assert(image.size == self.size)
+        assert image.size == self.size
         self._last_image = image
 
         image = self.preprocess(image)
@@ -152,7 +152,7 @@ class gifanim(emulator):
         self._images.append(im)
 
         self._count += 1
-        logger.debug("Recording frame: {0}".format(self._count))
+        logger.debug(f"Recording frame: {self._count}")
 
         if self._max_frames and self._count >= self._max_frames:
             sys.exit(0)
@@ -167,8 +167,7 @@ class gifanim(emulator):
                                      optimize=True, format="GIF")
 
             file_size = os.stat(self._filename).st_size
-            logger.debug("Wrote {0} frames to file: {1} ({2} bytes)".format(
-                self._count, self._filename, file_size))
+            logger.debug(f"Wrote {self._count} frames to file: {self._filename} ({file_size} bytes)")
 
 
 class pygame(emulator):
@@ -200,7 +199,7 @@ class pygame(emulator):
         """
         Takes a :py:mod:`PIL.Image` and renders it to a pygame display surface.
         """
-        assert(image.size == self.size)
+        assert image.size == self.size
         self._last_image = image
 
         image = self.preprocess(image)
@@ -286,7 +285,7 @@ if ASCII_AVAILABLE:
             Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
             ASCII-art.
             """
-            assert(image.size == self.size)
+            assert image.size == self.size
             self._last_image = image
 
             surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
@@ -350,7 +349,7 @@ if ASCII_AVAILABLE:
             """
             Return an iterator that produces the ascii art.
             """
-            image = image.resize((width, height), Image.ANTIALIAS).convert("RGB")
+            image = image.resize((width, height), Image.LANCZOS).convert("RGB")
             pixels = list(image.getdata())
 
             for y in range(0, height - 1, 2):
@@ -372,7 +371,7 @@ if ASCII_AVAILABLE:
             Takes a :py:mod:`PIL.Image` and renders it to the current terminal as
             ASCII-blocks.
             """
-            assert(image.size == self.size)
+            assert image.size == self.size
             self._last_image = image
 
             surface = self.to_surface(self.preprocess(image), alpha=self._contrast)
@@ -385,7 +384,7 @@ if ASCII_AVAILABLE:
             self._CSI('1;1H')  # Move to top/left
 
             for (fg, bg) in self._generate_art(image, int(image.width * scale), int(image.height * scale)):
-                self._CSI('38;5;{0};48;5;{1}m'.format(fg, bg))
+                self._CSI(f'38;5;{fg};48;5;{bg}m')
                 sys.stdout.write('▄')
 
             self._CSI('0m')

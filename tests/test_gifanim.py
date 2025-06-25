@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2024 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -17,8 +17,8 @@ from luma.emulator.device import gifanim
 
 import pytest
 
-import baseline_data
-from helpers import get_reference_image, assert_identical
+from .baseline_data import primitives
+from .helpers import get_reference_file, test_font, assert_identical
 
 
 def test_gifanim_write():
@@ -27,13 +27,13 @@ def test_gifanim_write():
         device = gifanim(filename=fname)
 
         with canvas(device) as draw:
-            baseline_data.primitives(device, draw)
+            primitives(device, draw)
 
         with canvas(device) as draw:
-            draw.text((30, 10), text="Blipvert", fill="white")
+            draw.text((30, 10), text="Blipvert", font=test_font, fill="white")
 
         with canvas(device) as draw:
-            baseline_data.primitives(device, draw)
+            primitives(device, draw)
 
         device.write_animation()
         assert_identical('anim.gif', fname)
@@ -48,7 +48,7 @@ def test_gifanim_noimages():
 
 
 def test_gifanim_max_frames():
-    reference = get_reference_image('anim.gif')
+    reference = get_reference_file('anim.gif')
     img = Image.open(reference)
     with NamedTemporaryFile(suffix='.gif') as temp:
         fname = temp.name
@@ -57,3 +57,4 @@ def test_gifanim_max_frames():
         with pytest.raises(SystemExit) as ex:
             device.display(img)
         assert str(ex.value) == '0'
+    img.close()
