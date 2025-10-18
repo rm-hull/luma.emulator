@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2022 Richard Hull and contributors
+# Copyright (c) 2017-2024 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -14,11 +14,11 @@ from luma.core.device import dummy
 from luma.core.render import canvas
 from luma.emulator.render import transformer
 
-from .helpers import get_reference_image
+from .helpers import get_reference_file, test_font
 
 
 def baseline_im():
-    return pygame.image.load(get_reference_image("capture.png"))
+    return pygame.image.load(get_reference_file("capture.png"))
 
 
 def to_pillow_img(surface):
@@ -31,7 +31,7 @@ def to_pygame_surface(im):
 
 
 def test_none():
-    with open(get_reference_image("capture.png"), "rb") as fp:
+    with open(get_reference_file("capture.png"), "rb") as fp:
         ref = Image.open(fp)
         surface = baseline_im()
         tf = transformer(pygame, 128, 64, 1)
@@ -41,7 +41,7 @@ def test_none():
 
 
 def test_scale2x():
-    with open(get_reference_image("scale2x.png"), "rb") as fp:
+    with open(get_reference_file("scale2x.png"), "rb") as fp:
         ref = Image.open(fp)
         surface = baseline_im()
         tf = transformer(pygame, 128, 64, 2)
@@ -51,7 +51,7 @@ def test_scale2x():
 
 
 def test_smoothscale():
-    with open(get_reference_image("smoothscale.png"), "rb") as fp:
+    with open(get_reference_file("smoothscale.png"), "rb") as fp:
         ref = Image.open(fp)
         surface = baseline_im()
         tf = transformer(pygame, 128, 64, 2)
@@ -61,7 +61,7 @@ def test_smoothscale():
 
 
 def test_identity():
-    with open(get_reference_image("identity.png"), "rb") as fp:
+    with open(get_reference_file("identity.png"), "rb") as fp:
         ref = Image.open(fp)
         surface = baseline_im()
         tf = transformer(pygame, 128, 64, 2)
@@ -71,13 +71,13 @@ def test_identity():
 
 
 def test_led_matrix():
-    with open(get_reference_image("led_matrix.png"), "rb") as fp:
+    with open(get_reference_file("led_matrix.png"), "rb") as fp:
         ref = Image.open(fp)
         device = dummy(width=40, height=24)
         with canvas(device) as draw:
             draw.rectangle(device.bounding_box, outline="white")
-            draw.text((5, 2), "Hello", fill="white")
-            draw.text((5, 10), "World", fill="white")
+            draw.text((5, 2), "Hello", font=test_font, fill="white")
+            draw.text((5, 10), "World", font=test_font, fill="white")
         surface = to_pygame_surface(device.image)
         tf = transformer(pygame, device.width, device.height, 16)
         im = to_pillow_img(tf.led_matrix(surface))
@@ -86,7 +86,7 @@ def test_led_matrix():
 
 
 def test_seven_segment():
-    with open(get_reference_image("seven_segment.png"), "rb") as fp:
+    with open(get_reference_file("seven_segment.png"), "rb") as fp:
         ref = Image.open(fp)
         chars = [
             # Alphabet with omissions

@@ -255,14 +255,14 @@ if ASCII_AVAILABLE:
             # Don't use string.printable, since we don't want any whitespace except spaces.
             charset = (string.ascii_letters + string.digits + string.punctuation + "  ")
             self._chars = list(reversed(sorted(charset, key=self._char_density)))
-            self._char_width, self._char_height = ImageFont.load_default().getsize("X")
+            self._char_width, self._char_height = ImageFont.load_default().getbbox("X")[2:]
             self._contrast = 1.0
 
         def _char_density(self, c, font=ImageFont.load_default()):
             """
             Count the number of black pixels in a rendered character.
             """
-            image = Image.new('1', font.getsize(c), color=255)
+            image = Image.new('1', font.getbbox(c)[2:], color=255)
             draw = ImageDraw.Draw(image)
             draw.text((0, 0), c, fill="white", font=font)
             return collections.Counter(image.getdata())[0]  # 0 is black
@@ -273,7 +273,7 @@ if ASCII_AVAILABLE:
             """
             # Characters aren't square, so scale the output by the aspect ratio of a charater
             height = int(height * self._char_width / float(self._char_height))
-            image = image.resize((width, height), Image.ANTIALIAS).convert("RGB")
+            image = image.resize((width, height), Image.Resampling.LANCZOS).convert("RGB")
 
             for (r, g, b) in image.getdata():
                 greyscale = int(0.299 * r + 0.587 * g + 0.114 * b)
