@@ -8,21 +8,20 @@ luma.emulator **|**
 
 Luma.Emulator
 =============
-
-.. image:: https://github.com/rm-hull/luma.emulator/workflows/luma.emulator/badge.svg?branch=master
-   :target: https://github.com/rm-hull/luma.emulator/actions?workflow=luma.emulator
+.. image:: https://github.com/rm-hull/luma.emulator/actions/workflows/main.yml/badge.svg
+   :target: https://github.com/rm-hull/luma.emulator/actions/workflows/main.yml
 
 .. image:: https://coveralls.io/repos/github/rm-hull/luma.emulator/badge.svg?branch=master
    :target: https://coveralls.io/github/rm-hull/luma.emulator?branch=master
 
-.. image:: https://img.shields.io/pypi/pyversions/luma.emulator.svg
-   :target: https://pypi.python.org/pypi/luma.emulator
+.. image:: https://img.shields.io/pypi/pyversions/luma.emulator
+   :target: https://pypi.org/project/luma.emulator
 
-.. image:: https://img.shields.io/pypi/v/luma.emulator.svg
-   :target: https://pypi.python.org/pypi/luma.emulator
+.. image:: https://img.shields.io/pypi/v/luma.emulator
+   :target: https://pypi.org/project/luma.emulator
 
 .. image:: https://img.shields.io/pypi/dm/luma.emulator
-   :target: https://pypi.python.org/project/luma.emulator
+   :target: https://pypi.org/project/luma.emulator
 
 **luma.emulator** provides a series of pseudo-display devices which allow 
 the `luma.core <https://github.com/rm-hull/luma.core>`_ components to be used
@@ -57,7 +56,7 @@ License
 -------
 The MIT License (MIT)
 
-Copyright (c) 2017-2024 Richard Hull and contributors
+Copyright (c) 2017-2026 Richard Hull and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
