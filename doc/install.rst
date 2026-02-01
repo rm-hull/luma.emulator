@@ -23,6 +23,10 @@ First, create a `virtual environment <https://docs.python.org/3/library/venv.htm
 This creates a virtual environment in the home directory called ``luma-env``
 and a Python executable at ``~/luma-env/bin/python``.
 
+Activate the environment::
+
+  $ source ~/luma-env/bin/activate
+
 Finally, install the latest version of the luma.emulator library in the
 virtual environment with::
 
