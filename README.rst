@@ -6,13 +6,17 @@ luma.emulator **|**
 `luma.led_matrix <https://github.com/rm-hull/luma.led_matrix>`__ **|** 
 `luma.oled <https://github.com/rm-hull/luma.oled>`__ 
 
-Luma.Emulator
+luma.emulator
 =============
 .. image:: https://github.com/rm-hull/luma.emulator/actions/workflows/main.yml/badge.svg
    :target: https://github.com/rm-hull/luma.emulator/actions/workflows/main.yml
 
-.. image:: https://coveralls.io/repos/github/rm-hull/luma.emulator/badge.svg?branch=master
-   :target: https://coveralls.io/github/rm-hull/luma.emulator?branch=master
+.. image:: https://coveralls.io/repos/github/rm-hull/luma.emulator/badge.svg?branch=main
+   :target: https://coveralls.io/github/rm-hull/luma.emulator?branch=main
+
+.. image:: https://readthedocs.org/projects/luma-emulator/badge/?version=latest
+   :target: http://luma-emulator.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
 .. image:: https://img.shields.io/pypi/pyversions/luma.emulator
    :target: https://pypi.org/project/luma.emulator
