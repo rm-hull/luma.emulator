@@ -1,20 +1,24 @@
 Luma.Emulator
 =============
 
-.. image:: https://github.com/rm-hull/luma.emulator/workflows/luma.emulator/badge.svg?branch=master
-   :target: https://github.com/rm-hull/luma.emulator/actions?workflow=luma.emulator
+.. image:: https://github.com/rm-hull/luma.emulator/actions/workflows/main.yml/badge.svg
+   :target: https://github.com/rm-hull/luma.emulator/actions/workflows/main.yml
 
-.. image:: https://coveralls.io/repos/github/rm-hull/luma.emulator/badge.svg?branch=master
-   :target: https://coveralls.io/github/rm-hull/luma.emulator?branch=master
+.. image:: https://coveralls.io/repos/github/rm-hull/luma.emulator/badge.svg?branch=main
+   :target: https://coveralls.io/github/rm-hull/luma.emulator?branch=main
 
-.. image:: https://img.shields.io/pypi/pyversions/luma.emulator.svg
-    :target: https://pypi.python.org/pypi/luma.emulator
+.. image:: https://readthedocs.org/projects/luma-emulator/badge/?version=latest
+   :target: https://luma-emulator.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
-.. image:: https://img.shields.io/pypi/v/luma.emulator.svg
-   :target: https://pypi.python.org/pypi/luma.emulator
+.. image:: https://img.shields.io/pypi/pyversions/luma.emulator
+   :target: https://pypi.org/project/luma.emulator
+
+.. image:: https://img.shields.io/pypi/v/luma.emulator
+   :target: https://pypi.org/project/luma.emulator
 
 .. image:: https://img.shields.io/pypi/dm/luma.emulator
-   :target: https://pypi.python.org/project/luma.emulator
+   :target: https://pypi.org/project/luma.emulator
 
 .. toctree::
    :maxdepth: 2
