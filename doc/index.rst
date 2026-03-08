@@ -8,7 +8,7 @@ Luma.Emulator
    :target: https://coveralls.io/github/rm-hull/luma.emulator?branch=main
 
 .. image:: https://readthedocs.org/projects/luma-emulator/badge/?version=latest
-   :target: http://luma-emulator.readthedocs.io/en/latest/?badge=latest
+   :target: https://luma-emulator.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
 .. image:: https://img.shields.io/pypi/pyversions/luma.emulator
