@@ -12,23 +12,16 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-minor-version: [9, 10, 11, 12, 13, 14]
+        python-minor-version: [10, 11, 12, 13, 14, 15-dev]
     name: Python 3.${{ matrix.python-minor-version }}
     steps:
       - uses: actions/checkout@v7
-      - name: Setup pip cache
-        uses: actions/cache@v6
-        id: pipcache
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
           python-version: 3.${{ matrix.python-minor-version }}
           check-latest: true
+          cache: 'pip'
       - name: Install system dependencies
         run: |
           sudo apt-get update
@@ -51,7 +44,7 @@ jobs:
         run: coveralls --service=github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
+          COVERALLS_FLAG_NAME: luma.emulator
           COVERALLS_PARALLEL: true
 
   coveralls:
