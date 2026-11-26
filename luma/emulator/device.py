@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2023 Richard Hull and contributors
+# Copyright (c) 2017-2026 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import os
@@ -265,7 +265,7 @@ if ASCII_AVAILABLE:
             image = Image.new('1', font.getbbox(c)[2:], color=255)
             draw = ImageDraw.Draw(image)
             draw.text((0, 0), c, fill="white", font=font)
-            return collections.Counter(image.getdata())[0]  # 0 is black
+            return collections.Counter(image.get_flattened_data())[0]  # 0 is black
 
         def _generate_art(self, image, width, height):
             """
@@ -275,7 +275,7 @@ if ASCII_AVAILABLE:
             height = int(height * self._char_width / float(self._char_height))
             image = image.resize((width, height), Image.Resampling.LANCZOS).convert("RGB")
 
-            for (r, g, b) in image.getdata():
+            for (r, g, b) in image.get_flattened_data():
                 greyscale = int(0.299 * r + 0.587 * g + 0.114 * b)
                 ch = self._chars[int(greyscale / 255. * (len(self._chars) - 1) + 0.5)]
                 yield (ch, rgb2short(r, g, b))
@@ -350,7 +350,7 @@ if ASCII_AVAILABLE:
             Return an iterator that produces the ascii art.
             """
             image = image.resize((width, height), Image.LANCZOS).convert("RGB")
-            pixels = list(image.getdata())
+            pixels = list(image.get_flattened_data())
 
             for y in range(0, height - 1, 2):
                 for x in range(width):
