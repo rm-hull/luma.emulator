@@ -4,7 +4,8 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **1.8.0**  | * Drop support for Python 3.9                                       | TBC        |
+| **1.8.0**  | * Replace pygame dependency with pygame-ce                          | TBC        |
+|            | * Drop support for Python 3.9                                       |            |
 |            | * Replace deprecated Pillow getdata() with get_flattened_data()     |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.7.0**  | * Drop support for Python 3.8                                       | 2026/02/01 |
