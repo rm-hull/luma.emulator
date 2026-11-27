@@ -5,6 +5,7 @@ ChangeLog
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
 | **1.8.0**  | * Drop support for Python 3.9                                       | TBC        |
+|            | * Replace deprecated Pillow getdata() with get_flattened_data()     |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.7.0**  | * Drop support for Python 3.8                                       | 2026/02/01 |
 |            | * asciiart: fix compatibility with Pillow ≥ 10                      |            |
