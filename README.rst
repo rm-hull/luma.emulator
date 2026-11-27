@@ -31,7 +31,7 @@ luma.emulator
 the `luma.core <https://github.com/rm-hull/luma.core>`_ components to be used
 without running a physical device. These include:
 
-* Real-time (pixel) emulator, based on `pygame <http://pygame.org/docs/>`__
+* Real-time (pixel) emulator, based on `pygame-ce <https://pyga.me/>`__
 * LED matrix and 7-segment renderers
 * PNG screen capture
 * Animated GIF animator
