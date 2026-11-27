@@ -6,14 +6,8 @@ env_list = ["py39", "py310", "py311", "py312", "py313", "py314", "qa", "doc"]
 skip_missing_interpreters = true
 
 [env_run_base]
-set_env = {
-    PYTHONDEVMODE = "1",
-    DISTUTILS_DEBUG = "0",
-    PYTHONTRACEMALLOC = "1"
-}
-deps = [
-    ".[test]"
-]
+set_env = { PYTHONDEVMODE = "1", DISTUTILS_DEBUG = "0", PYTHONTRACEMALLOC = "1" }
+deps = [".[test]"]
 commands = [
     ["coverage", "erase"],
     ["python", "-m", "pytest", "--cov=luma"],
@@ -21,9 +15,7 @@ commands = [
 ]
 
 [env.qa]
-deps = [
-    ".[qa]"
-]
+deps = [".[qa]"]
 commands = [
     ["flake8"],
     ["rstcheck", "README.rst"],
@@ -31,9 +23,7 @@ commands = [
 
 [env.doc]
 changedir = "doc"
-deps = [
-    ".[docs]"
-]
+deps = [".[docs]"]
 commands = [
     ["sphinx-build", "-W", "-b", "html", "-d", "{env_tmp_dir}/doctrees", ".", "{env_tmp_dir}/html"],
 ]
