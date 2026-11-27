@@ -12,27 +12,22 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-minor-version: [9, 10, 11, 12, 13, 14]
+        python-minor-version: [10, 11, 12, 13, 14, 15]
     name: Python 3.${{ matrix.python-minor-version }}
     steps:
       - uses: actions/checkout@v7
-      - name: Setup pip cache
-        uses: actions/cache@v6
-        id: pipcache
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
           python-version: 3.${{ matrix.python-minor-version }}
           check-latest: true
+          cache: 'pip'
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install graphviz libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libfreetype6-dev libjpeg-dev python3-setuptools python3-dev python3-numpy
+          sudo apt-get install graphviz libjpeg-dev
+          sudo apt-get install libfreetype6-dev libportmidi-dev python3-dev python3-pip python3-numpy python3-setuptools
+          sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
       - name: Install Python packages
@@ -51,7 +46,7 @@ jobs:
         run: coveralls --service=github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
+          COVERALLS_FLAG_NAME: luma.emulator
           COVERALLS_PARALLEL: true
 
   coveralls:
